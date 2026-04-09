@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.justdial.com)",
+      "Bash(npx create-next-app@latest nextjs-hostel --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm)",
+      "Bash(npm install:*)"
+    ]
+  }
+}
