@@ -3,7 +3,30 @@
     "allow": [
       "WebFetch(domain:www.justdial.com)",
       "Bash(npx create-next-app@latest nextjs-hostel --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(taskkill /PID 4984 /F)",
+      "Bash(tasklist)",
+      "Bash(taskkill:*)",
+      "PowerShell(Test-Path *)",
+      "Bash(mkdir -p \"E:/HOTEL WEB/public/images/muskan-girls-hostel\")",
+      "Read(//c/Users/HP/Downloads/**)",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.04.44.jpeg\" \"E:/HOTEL WEB/public/images/muskan-girls-hostel/photo-01.jpeg\")",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.04.49.jpeg\" \"E:/HOTEL WEB/public/images/muskan-girls-hostel/photo-02.jpeg\")",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.04.53.jpeg\" \"E:/HOTEL WEB/public/images/muskan-girls-hostel/photo-03.jpeg\")",
+      "Bash(awk '$6 == \"Apr\" && $7 == \"21\"')",
+      "Bash(awk '{print $5, $9, $10, $11, $12, $13}')",
+      "Bash(mkdir -p \"E:/HOTEL WEB/public/images/sankalp-boys-hostel\")",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.08.18.jpeg\" \"E:/HOTEL WEB/public/images/sankalp-boys-hostel/photo-01.jpeg\")",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.08.19.jpeg\" \"E:/HOTEL WEB/public/images/sankalp-boys-hostel/photo-02.jpeg\")",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.08.20.jpeg\" \"E:/HOTEL WEB/public/images/sankalp-boys-hostel/photo-03.jpeg\")",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.08.22.jpeg\" \"E:/HOTEL WEB/public/images/sankalp-boys-hostel/photo-04.jpeg\")",
+      "Bash(mkdir -p \"E:/HOTEL WEB/public/images/sanskriti-girls-hostel\")",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.37.08.jpeg\" \"E:/HOTEL WEB/public/images/sanskriti-girls-hostel/photo-01.jpeg\")",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.37.08 \\(1\\).jpeg\" \"E:/HOTEL WEB/public/images/sanskriti-girls-hostel/photo-02.jpeg\")",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.37.08 \\(2\\).jpeg\" \"E:/HOTEL WEB/public/images/sanskriti-girls-hostel/photo-03.jpeg\")",
+      "Bash(cp \"WhatsApp Image 2026-04-21 at 22.37.09.jpeg\" \"E:/HOTEL WEB/public/images/sanskriti-girls-hostel/photo-04.jpeg\")",
+      "Bash(git add *)"
     ]
   }
 }
