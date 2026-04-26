@@ -46,7 +46,8 @@ setIsSubmitting(true);
 setSubmitError("");
 
 try{
-  const response =await fetch("http://localhost:5000/lead",{
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+  const response = await fetch(`${apiUrl}/lead`,{
   method:"POST",
   headers: {"Content-Type": "application/json"},
   body: JSON.stringify({

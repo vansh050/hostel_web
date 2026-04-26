@@ -1,3 +1,4 @@
+import json
 import os
 from datetime import datetime
 
@@ -17,10 +18,18 @@ CREDS_PATH = os.path.join(BASE_DIR, "credentials.json")
 _client = None
 
 
+def _load_credentials():
+    creds_json = os.environ.get("GOOGLE_CREDENTIALS_JSON")
+    if creds_json:
+        info = json.loads(creds_json)
+        return Credentials.from_service_account_info(info, scopes=SCOPES)
+    return Credentials.from_service_account_file(CREDS_PATH, scopes=SCOPES)
+
+
 def _get_client():
     global _client
     if _client is None:
-        creds = Credentials.from_service_account_file(CREDS_PATH, scopes=SCOPES)
+        creds = _load_credentials()
         _client = gspread.authorize(creds)
     return _client
 
@@ -31,4 +40,3 @@ def append_lead(hostel: str, name: str, phone: str, action: str) -> None:
     worksheet = sheet.worksheet(hostel)
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     worksheet.append_row([timestamp, name, phone, action, DEFAULT_ACTIONED_STATUS, ""])
-

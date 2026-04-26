@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -6,7 +7,13 @@ import sheets
 
 load_dotenv()
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])
+allowed_origins = os.environ.get(
+    "ALLOWED_ORIGINS",
+    "http://localhost:3000",
+).split(",")
+CORS(app, origins=allowed_origins)
+
+
 @app.route("/")
 def home():
     return {"message": "Lalpur Hostels backend is alive!"}
