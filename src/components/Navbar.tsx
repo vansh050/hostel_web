@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Building2, Phone } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { BRAND_NAME, BRAND_WHATSAPP } from "@/data/hostels";
 
 export default function Navbar() {
@@ -11,30 +11,27 @@ export default function Navbar() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/#hostels", label: "Our Hostels" },
-    { href: "/about", label: "About Us" },
+    { href: "/about", label: "About" },
     { href: "/blog", label: "Blog" },
     { href: "/contact", label: "Contact" },
   ];
 
   return (
-    <header className="bg-white/70 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-neutral-200">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <Building2 className="w-8 h-8 text-blue-600" />
-            <span className="text-xl font-bold text-gray-900">
+            <span className="text-lg font-semibold tracking-tight text-neutral-900">
               {BRAND_NAME}
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                className="px-3 py-2 text-sm font-medium text-neutral-700 hover:text-neutral-900 transition-colors"
               >
                 {link.label}
               </Link>
@@ -43,33 +40,31 @@ export default function Navbar() {
               href={`https://wa.me/${BRAND_WHATSAPP}?text=Hi, I am interested in your hostel. Please share details.`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              className="ml-3 inline-flex items-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors"
             >
-              <Phone className="w-4 h-4" />
-              Enquire Now
+              <Phone className="w-3.5 h-3.5" />
+              Enquire
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100"
+            className="md:hidden p-2 rounded-lg text-neutral-700 hover:bg-neutral-100"
             aria-label={isOpen ? "Close menu" : "Open menu"}
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
 
-        {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden pb-4 border-t border-gray-100 mt-2">
-            <div className="flex flex-col gap-2 pt-4">
+          <div className="md:hidden pb-4 border-t border-neutral-200 mt-2">
+            <div className="flex flex-col gap-1 pt-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="text-gray-700 hover:text-blue-600 font-medium px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="text-neutral-700 hover:text-neutral-900 font-medium px-3 py-2.5 rounded-lg hover:bg-neutral-50 transition-colors"
                 >
                   {link.label}
                 </Link>
@@ -78,7 +73,7 @@ export default function Navbar() {
                 href={`https://wa.me/${BRAND_WHATSAPP}?text=Hi, I am interested in your hostel. Please share details.`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors mt-2"
+                className="inline-flex items-center justify-center gap-2 bg-neutral-900 text-white px-4 py-2.5 rounded-full font-medium transition-colors mt-2"
               >
                 <Phone className="w-4 h-4" />
                 Enquire on WhatsApp

@@ -26,7 +26,12 @@
       "Bash(cp \"WhatsApp Image 2026-04-21 at 22.37.08 \\(1\\).jpeg\" \"E:/HOTEL WEB/public/images/sanskriti-girls-hostel/photo-02.jpeg\")",
       "Bash(cp \"WhatsApp Image 2026-04-21 at 22.37.08 \\(2\\).jpeg\" \"E:/HOTEL WEB/public/images/sanskriti-girls-hostel/photo-03.jpeg\")",
       "Bash(cp \"WhatsApp Image 2026-04-21 at 22.37.09.jpeg\" \"E:/HOTEL WEB/public/images/sanskriti-girls-hostel/photo-04.jpeg\")",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "WebFetch(domain:hostel-web-sand.vercel.app)",
+      "Bash(pip --version)",
+      "Bash(python *)"
     ]
   }
 }

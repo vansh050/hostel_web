@@ -12,7 +12,7 @@ import ContactForm from "@/components/ContactForm";
 
 export const metadata: Metadata = {
   title: `Contact Us - ${BRAND_NAME} | Hostels in Ranchi`,
-  description: `Contact ${BRAND_NAME} for hostel booking enquiries in Ranchi. Call, WhatsApp, or visit our hostels in Lalpur, Ranchi. We are happy to help you find the perfect accommodation.`,
+  description: `Contact ${BRAND_NAME} for hostel booking enquiries in Ranchi. Call, WhatsApp, or visit our hostels in Lalpur, Ranchi.`,
   alternates: {
     canonical: "https://lalpurhostels.com/contact",
   },
@@ -46,38 +46,36 @@ export default function ContactPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Contact Us</h1>
-          <p className="text-blue-100 text-lg max-w-2xl mx-auto">
-            Have questions about our hostels? Want to book a room or schedule a
-            visit? We are here to help!
-          </p>
-        </div>
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10 md:pt-24 md:pb-16">
+        <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 mb-4">
+          Contact
+        </p>
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 leading-tight">
+          Get in touch.
+        </h1>
+        <p className="text-lg text-neutral-600 mt-5 max-w-2xl">
+          Have questions about our hostels? Want to book a room or schedule a
+          visit? We are here to help.
+        </p>
       </section>
 
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="pb-20 px-4 sm:px-6 lg:px-8 border-t border-neutral-200 pt-14 md:pt-20">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Info */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Get In Touch
+              <h2 className="text-2xl font-semibold tracking-tight text-neutral-900 mb-6">
+                Reach us directly
               </h2>
 
-              {/* Quick Contact */}
-              <div className="space-y-4 mb-8">
+              <div className="space-y-3 mb-10">
                 <a
                   href={`tel:${BRAND_PHONE}`}
-                  className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                  className="flex items-center gap-4 p-5 border border-neutral-200 rounded-2xl hover:border-neutral-900 transition-colors"
                 >
-                  <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-6 h-6" />
-                  </div>
+                  <Phone className="w-5 h-5 text-neutral-900" strokeWidth={1.75} />
                   <div>
-                    <p className="font-semibold text-gray-900">Call Us</p>
-                    <p className="text-gray-600 text-sm">{BRAND_PHONE}</p>
+                    <p className="font-medium text-neutral-900 text-sm">Call us</p>
+                    <p className="text-neutral-500 text-sm">{BRAND_PHONE}</p>
                   </div>
                 </a>
 
@@ -85,66 +83,55 @@ export default function ContactPage() {
                   href={`https://wa.me/${BRAND_WHATSAPP}?text=Hi, I want to enquire about hostel rooms in Ranchi.`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                  className="flex items-center gap-4 p-5 border border-neutral-200 rounded-2xl hover:border-neutral-900 transition-colors"
                 >
-                  <div className="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <MessageCircle className="w-6 h-6" />
-                  </div>
+                  <MessageCircle className="w-5 h-5 text-neutral-900" strokeWidth={1.75} />
                   <div>
-                    <p className="font-semibold text-gray-900">WhatsApp</p>
-                    <p className="text-gray-600 text-sm">
-                      Quick response guaranteed
-                    </p>
+                    <p className="font-medium text-neutral-900 text-sm">WhatsApp</p>
+                    <p className="text-neutral-500 text-sm">Quick response guaranteed</p>
                   </div>
                 </a>
 
                 <a
                   href={`mailto:${BRAND_EMAIL}`}
-                  className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                  className="flex items-center gap-4 p-5 border border-neutral-200 rounded-2xl hover:border-neutral-900 transition-colors"
                 >
-                  <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6" />
-                  </div>
+                  <Mail className="w-5 h-5 text-neutral-900" strokeWidth={1.75} />
                   <div>
-                    <p className="font-semibold text-gray-900">Email Us</p>
-                    <p className="text-gray-600 text-sm">{BRAND_EMAIL}</p>
+                    <p className="font-medium text-neutral-900 text-sm">Email us</p>
+                    <p className="text-neutral-500 text-sm">{BRAND_EMAIL}</p>
                   </div>
                 </a>
 
-                <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm">
-                  <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Clock className="w-6 h-6" />
-                  </div>
+                <div className="flex items-center gap-4 p-5 border border-neutral-200 rounded-2xl">
+                  <Clock className="w-5 h-5 text-neutral-900" strokeWidth={1.75} />
                   <div>
-                    <p className="font-semibold text-gray-900">Visit Hours</p>
-                    <p className="text-gray-600 text-sm">
-                      10:00 AM - 7:00 PM (All days)
-                    </p>
+                    <p className="font-medium text-neutral-900 text-sm">Visit hours</p>
+                    <p className="text-neutral-500 text-sm">10:00 AM – 7:00 PM (All days)</p>
                   </div>
                 </div>
               </div>
 
-              {/* Hostel Addresses */}
-              <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Our Hostel Locations
+              <h3 className="text-lg font-semibold text-neutral-900 mb-4">
+                Hostel locations
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {hostelsData.map((hostel) => (
                   <div
                     key={hostel.id}
-                    className="p-4 bg-white rounded-xl shadow-sm"
+                    className="p-5 border border-neutral-200 rounded-2xl"
                   >
-                    <h4 className="font-semibold text-gray-900 mb-1">
+                    <h4 className="font-medium text-neutral-900 mb-1.5 text-sm">
                       {hostel.name}
                     </h4>
-                    <p className="flex items-start gap-2 text-gray-600 text-sm mb-2">
-                      <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-red-400" />
+                    <p className="flex items-start gap-2 text-neutral-600 text-sm mb-3 leading-relaxed">
+                      <MapPin className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-neutral-400" />
                       {hostel.fullAddress} - {hostel.pincode}
                     </p>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 text-sm">
                       <a
                         href={`tel:${hostel.contacts[0]?.phone}`}
-                        className="text-blue-600 text-sm font-medium hover:underline"
+                        className="text-neutral-900 font-medium underline underline-offset-4 hover:no-underline"
                       >
                         {hostel.contacts[0]?.phone}
                       </a>
@@ -152,9 +139,9 @@ export default function ContactPage() {
                         href={hostel.googleMapsUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-blue-600 text-sm font-medium hover:underline"
+                        className="inline-flex items-center gap-1 text-neutral-900 font-medium underline underline-offset-4 hover:no-underline"
                       >
-                        <Navigation className="w-3.5 h-3.5" />
+                        <Navigation className="w-3 h-3" />
                         Directions
                       </a>
                     </div>
@@ -163,10 +150,9 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                Send Us a Message
+              <h2 className="text-2xl font-semibold tracking-tight text-neutral-900 mb-6">
+                Send a message
               </h2>
               <ContactForm />
             </div>
@@ -174,13 +160,12 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map Section */}
-      <section className="py-8 px-4 sm:px-6 lg:px-8 bg-gray-50">
+      <section className="pb-20 px-4 sm:px-6 lg:px-8 border-t border-neutral-200 pt-14">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-            Find Us on the Map
+          <h2 className="text-2xl font-semibold tracking-tight text-neutral-900 mb-6">
+            Find us on the map
           </h2>
-          <div className="rounded-2xl overflow-hidden shadow-lg">
+          <div className="rounded-2xl overflow-hidden border border-neutral-200">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14651.2!2d85.31!3d23.37!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f4e1e8cbda25f7%3A0x830e5fe8648ccb39!2sLalpur%2C%20Ranchi%2C%20Jharkhand!5e0!3m2!1sen!2sin!4v1"
               width="100%"

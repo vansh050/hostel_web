@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Shield, Heart, Users, Award, MapPin, Clock } from "lucide-react";
+import { Shield, Heart, Users, Sparkles, MapPin, Clock } from "lucide-react";
 import { BRAND_NAME, hostelsData } from "@/data/hostels";
 import Link from "next/link";
 
@@ -14,26 +14,27 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            About {BRAND_NAME}
-          </h1>
-          <p className="text-blue-100 text-lg max-w-2xl mx-auto">
-            Your trusted partner for safe, comfortable, and affordable hostel
-            accommodation in the heart of Ranchi.
-          </p>
-        </div>
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10 md:pt-24 md:pb-16">
+        <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 mb-4">
+          About Us
+        </p>
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 max-w-3xl leading-tight">
+          A second home for students and professionals in Ranchi.
+        </h1>
+        <p className="text-lg text-neutral-600 mt-6 max-w-2xl leading-relaxed">
+          Your trusted partner for safe, comfortable, and affordable hostel
+          accommodation in the heart of Ranchi.
+        </p>
       </section>
 
-      {/* Our Story */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-14 md:py-20 px-4 sm:px-6 lg:px-8 border-t border-neutral-200">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
-          <div className="prose prose-lg text-gray-700 space-y-4">
+          <h2 className="text-2xl md:text-3xl font-semibold tracking-tight text-neutral-900 mb-6">
+            Our story
+          </h2>
+          <div className="space-y-4 text-neutral-700 leading-relaxed">
             <p>
-              {BRAND_NAME} was born out of a simple yet powerful vision - to
+              {BRAND_NAME} was born out of a simple yet powerful vision — to
               provide students, working professionals, and competitive exam
               aspirants in Ranchi with a place they can truly call their second
               home.
@@ -41,124 +42,118 @@ export default function AboutPage() {
             <p>
               Located in the bustling Lalpur area of Ranchi, we understand the
               needs of young people who come from different cities and towns of
-              Jharkhand and beyond to study, work, and build their careers. We know
-              that finding a safe, clean, and affordable place to stay is one of
-              the biggest challenges they face.
+              Jharkhand and beyond to study, work, and build their careers. We
+              know that finding a safe, clean, and affordable place to stay is
+              one of the biggest challenges they face.
             </p>
             <p>
               That is why we started with one hostel and have now grown to{" "}
-              <strong>3 well-managed hostels</strong> - 2 exclusively for girls
-              and 1 for boys. Each hostel is designed to provide the comfort of
-              home with the convenience of a prime Lalpur location.
+              <strong className="text-neutral-900 font-semibold">3 well-managed hostels</strong>{" "}
+              — 2 exclusively for girls and 1 for boys. Each hostel is designed
+              to provide the comfort of home with the convenience of a prime
+              Lalpur location.
             </p>
             <p>
-              We take pride in our <strong>home-cooked meals</strong>,{" "}
-              <strong>24/7 security</strong>, <strong>clean rooms</strong>, and a{" "}
-              <strong>caring staff</strong> that treats every resident like family.
-              Our hostels are not just a place to sleep - they are a community
+              We take pride in our home-cooked meals, 24/7 security, clean
+              rooms, and a caring staff that treats every resident like family.
+              Our hostels are not just a place to sleep — they are a community
               where lifelong friendships are made.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Our Values */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
+      <section className="py-14 md:py-20 px-4 sm:px-6 lg:px-8 border-t border-neutral-200 bg-white">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
-            What We Stand For
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="mb-12">
+            <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 mb-3">
+              What we stand for
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 max-w-2xl">
+              The values behind every hostel we run.
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
             {[
               {
                 icon: Shield,
-                title: "Safety First",
+                title: "Safety first",
                 description:
-                  "24/7 CCTV surveillance, security guards, strict visitor policy, and well-lit premises. Your safety is our top priority.",
-                color: "bg-blue-50 text-blue-600",
+                  "24/7 CCTV surveillance, security guards, strict visitor policy, and well-lit premises.",
               },
               {
                 icon: Heart,
-                title: "Homely Environment",
+                title: "Homely environment",
                 description:
-                  "We create a warm, family-like atmosphere where every resident feels at home. Our staff cares for you like their own.",
-                color: "bg-red-50 text-red-600",
+                  "A warm, family-like atmosphere where every resident feels at home.",
               },
               {
                 icon: Users,
                 title: "Community",
                 description:
-                  "A supportive community of students and professionals who help each other grow, study, and succeed together.",
-                color: "bg-green-50 text-green-600",
+                  "A supportive community of students and professionals who grow together.",
               },
               {
-                icon: Award,
-                title: "Quality & Hygiene",
+                icon: Sparkles,
+                title: "Quality & hygiene",
                 description:
-                  "Clean rooms, regular housekeeping, hygienic food preparation, and well-maintained common areas. No compromises.",
-                color: "bg-purple-50 text-purple-600",
+                  "Clean rooms, regular housekeeping, hygienic food preparation. No compromises.",
               },
               {
                 icon: MapPin,
-                title: "Prime Location",
+                title: "Prime location",
                 description:
-                  "All our hostels are in Lalpur - the heart of Ranchi. Close to markets, coaching centers, offices, and transport hubs.",
-                color: "bg-orange-50 text-orange-600",
+                  "All hostels are in Lalpur — close to markets, coaching centers, and transport.",
               },
               {
                 icon: Clock,
-                title: "Affordable Pricing",
+                title: "Affordable pricing",
                 description:
-                  "Quality accommodation that does not burn a hole in your pocket. Transparent pricing with no hidden charges.",
-                color: "bg-teal-50 text-teal-600",
+                  "Quality accommodation without hidden charges. Transparent pricing.",
               },
             ].map((item) => (
-              <div
-                key={item.title}
-                className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
-              >
-                <div
-                  className={`w-12 h-12 ${item.color} rounded-xl flex items-center justify-center mb-4`}
-                >
-                  <item.icon className="w-6 h-6" />
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">
+              <div key={item.title}>
+                <item.icon className="w-6 h-6 text-neutral-900 mb-4" strokeWidth={1.5} />
+                <h3 className="font-semibold text-neutral-900 mb-2">
                   {item.title}
                 </h3>
-                <p className="text-gray-600 text-sm">{item.description}</p>
+                <p className="text-sm text-neutral-600 leading-relaxed">
+                  {item.description}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Our Hostels Summary */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">
-            Our 3 Hostels in Ranchi
-          </h2>
+      <section className="py-14 md:py-20 px-4 sm:px-6 lg:px-8 border-t border-neutral-200">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-10 text-center">
+            <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 mb-3">
+              Our locations
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900">
+              Three hostels in Ranchi
+            </h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {hostelsData.map((hostel) => (
               <Link
                 key={hostel.id}
                 href={`/hostel/${hostel.id}`}
-                className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 group"
+                className="group block border border-neutral-200 rounded-2xl p-6 hover:border-neutral-900 transition-colors"
               >
-                <div
-                  className={`w-12 h-12 ${hostel.type === "girls" ? "bg-pink-50 text-pink-600" : "bg-blue-50 text-blue-600"} rounded-xl flex items-center justify-center mx-auto mb-3`}
-                >
-                  <Users className="w-6 h-6" />
-                </div>
-                <h3 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                <span className="inline-block text-xs font-medium uppercase tracking-wider text-neutral-500 mb-3">
+                  {hostel.type === "girls" ? "Girls" : "Boys"} Hostel
+                </span>
+                <h3 className="font-semibold text-neutral-900 mb-1 group-hover:text-neutral-700 transition-colors">
                   {hostel.name}
                 </h3>
-                <p className="text-sm text-gray-500 mt-1">
-                  {hostel.type === "girls" ? "Girls Hostel" : "Boys Hostel"} |{" "}
-                  {hostel.location}
+                <p className="text-sm text-neutral-500 mb-3">
+                  {hostel.landmark}, {hostel.location}
                 </p>
-                <p className="text-blue-600 font-semibold mt-2 text-sm">
-                  {hostel.priceRange}
+                <p className="text-sm font-medium text-neutral-900">
+                  {hostel.priceRange.replace(/Rs /g, "₹")}
                 </p>
               </Link>
             ))}
@@ -166,22 +161,23 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-blue-700 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Ready to Find Your Second Home?
-          </h2>
-          <p className="text-blue-100 mb-8">
-            Visit our hostels, meet our team, and experience the {BRAND_NAME}{" "}
-            difference.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center bg-white text-blue-700 hover:bg-blue-50 px-8 py-3 rounded-lg font-semibold transition-colors"
-          >
-            Get In Touch
-          </Link>
+      <section className="py-20 md:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-200">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-neutral-950 rounded-3xl px-8 py-14 md:px-14 md:py-20 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+              Ready to find your second home?
+            </h2>
+            <p className="text-neutral-400 mt-4 max-w-xl mx-auto">
+              Visit our hostels, meet our team, and experience the {BRAND_NAME}{" "}
+              difference.
+            </p>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center bg-white text-neutral-900 hover:bg-neutral-100 px-6 py-3 rounded-full font-medium transition-colors mt-8"
+            >
+              Get in touch
+            </Link>
+          </div>
         </div>
       </section>
     </>

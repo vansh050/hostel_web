@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Building2, Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import {
   BRAND_NAME,
   BRAND_PHONE,
@@ -9,41 +9,40 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand */}
+    <footer className="bg-neutral-950 text-neutral-400 border-t border-neutral-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Building2 className="w-7 h-7 text-blue-400" />
-              <span className="text-xl font-bold text-white">{BRAND_NAME}</span>
-            </div>
-            <p className="text-sm text-gray-400 mb-4">
+            <span className="text-lg font-semibold text-white tracking-tight block mb-3">
+              {BRAND_NAME}
+            </span>
+            <p className="text-sm leading-relaxed mb-5">
               Trusted hostels in Lalpur, Ranchi providing safe, clean, and
-              affordable accommodation for boys and girls since years.
+              affordable accommodation for students and working professionals.
             </p>
             <div className="flex flex-col gap-2 text-sm">
               <a
                 href={`tel:${BRAND_PHONE}`}
                 className="flex items-center gap-2 hover:text-white transition-colors"
               >
-                <Phone className="w-4 h-4" />
+                <Phone className="w-3.5 h-3.5" />
                 {BRAND_PHONE}
               </a>
               <a
                 href={`mailto:${BRAND_EMAIL}`}
                 className="flex items-center gap-2 hover:text-white transition-colors"
               >
-                <Mail className="w-4 h-4" />
+                <Mail className="w-3.5 h-3.5" />
                 {BRAND_EMAIL}
               </a>
             </div>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-sm">
+            <h3 className="text-white text-sm font-semibold mb-4 uppercase tracking-wider">
+              Explore
+            </h3>
+            <ul className="space-y-2.5 text-sm">
               <li>
                 <Link href="/" className="hover:text-white transition-colors">
                   Home
@@ -51,52 +50,51 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/about" className="hover:text-white transition-colors">
-                  About Us
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog" className="hover:text-white transition-colors">
+                  Blog
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="hover:text-white transition-colors">
-                  Contact Us
+                  Contact
                 </Link>
               </li>
-              {hostelsData.map((hostel) => (
-                <li key={hostel.id}>
-                  <Link
-                    href={`/hostel/${hostel.id}`}
-                    className="hover:text-white transition-colors"
-                  >
-                    {hostel.name}
-                  </Link>
-                </li>
-              ))}
             </ul>
           </div>
 
-          {/* Our Hostels */}
           <div className="lg:col-span-2">
-            <h3 className="text-white font-semibold mb-4">Our Hostel Locations</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <h3 className="text-white text-sm font-semibold mb-4 uppercase tracking-wider">
+              Our Hostels
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               {hostelsData.map((hostel) => (
-                <div key={hostel.id} className="text-sm">
-                  <h4 className="text-white font-medium mb-1">{hostel.name}</h4>
-                  <p className="flex items-start gap-2 text-gray-400">
-                    <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                    {hostel.fullAddress} - {hostel.pincode}
+                <Link
+                  key={hostel.id}
+                  href={`/hostel/${hostel.id}`}
+                  className="group"
+                >
+                  <h4 className="text-white text-sm font-medium mb-1 group-hover:text-neutral-300 transition-colors">
+                    {hostel.name}
+                  </h4>
+                  <p className="flex items-start gap-1.5 text-xs leading-relaxed">
+                    <MapPin className="w-3 h-3 mt-0.5 flex-shrink-0" />
+                    {hostel.landmark}, {hostel.location}
                   </p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-10 pt-6 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+        <div className="mt-14 pt-6 border-t border-neutral-900 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500">
           <p>
             &copy; {new Date().getFullYear()} {BRAND_NAME}. All rights reserved.
           </p>
-          <p>
-            Best Hostels in Lalpur, Ranchi | Girls Hostel & Boys Hostel in Ranchi
-          </p>
+          <p>Hostels & PG in Lalpur, Ranchi</p>
         </div>
       </div>
     </footer>
