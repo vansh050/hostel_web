@@ -1,14 +1,12 @@
-import HeroSection from "@/components/HeroSection";
+import Link from "next/link";
+import HeroSlider from "@/components/HeroSlider";
 import HostelCard from "@/components/HostelCard";
-import ReviewCard from "@/components/ReviewCard";
+import QuoteCarousel from "@/components/QuoteCarousel";
+import AnimatedCounter from "@/components/AnimatedCounter";
 import { hostelsData, BRAND_NAME } from "@/data/hostels";
-import { Shield, Heart, Sparkles, Clock } from "lucide-react";
+import { Shield, Utensils, Sparkles, Heart, ArrowRight } from "lucide-react";
 
 export default function HomePage() {
-  const allReviews = hostelsData.flatMap((h) =>
-    h.reviews.map((r) => ({ ...r, hostelName: h.name }))
-  );
-
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -45,6 +43,11 @@ export default function HomePage() {
     },
   };
 
+  const totalReviews = hostelsData.reduce(
+    (acc, h) => acc + h.reviews.length,
+    0
+  );
+
   return (
     <>
       <script
@@ -52,92 +55,89 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <HeroSection />
+      <HeroSlider />
 
-      {/* Hostels */}
-      <section
-        id="hostels"
-        className="relative py-24 md:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden"
-      >
-        {/* Soft ambient background */}
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute top-16 left-1/4 w-[640px] h-[640px] bg-gradient-to-br from-rose-100 via-pink-50 to-transparent opacity-70 rounded-full blur-3xl" />
-          <div className="absolute bottom-16 right-1/4 w-[640px] h-[640px] bg-gradient-to-br from-indigo-100 via-sky-50 to-transparent opacity-60 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 -right-20 w-[440px] h-[440px] bg-gradient-to-tl from-amber-100 to-transparent opacity-60 rounded-full blur-3xl" />
-        </div>
-
-        <div className="max-w-7xl mx-auto relative">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-rose-600 mb-4">
-                — Our Hostels
+      {/* Story / Intro */}
+      <section className="py-24 md:py-36 px-6 md:px-10 lg:px-14">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
+            <div className="lg:col-span-4">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-stone-500 mb-6">
+                — Our story
               </p>
-              <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 leading-[1.05]">
-                Three places to{" "}
-                <span className="relative inline-block">
-                  <span className="relative z-10 italic font-medium text-rose-700">
-                    call home
-                  </span>
-                  <span className="absolute left-0 bottom-1 h-2.5 w-full bg-rose-100 -z-0" />
-                </span>
-                .
-              </h2>
+              <p
+                className="text-sm uppercase tracking-[0.18em] font-medium"
+                style={{ color: "var(--color-saffron)" }}
+              >
+                Est. in Lalpur, Ranchi
+              </p>
             </div>
-            <p className="text-neutral-600 max-w-md md:text-right leading-relaxed">
-              Three hostels and PGs in Lalpur designed for students, working
-              professionals, and exam aspirants.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-            {hostelsData.map((hostel, index) => (
-              <HostelCard key={hostel.id} hostel={hostel} index={index} />
-            ))}
+            <div className="lg:col-span-8">
+              <h2 className="font-display text-[clamp(2rem,5vw,3.75rem)] leading-[1.06] tracking-tight font-medium">
+                We started{" "}
+                <span className="font-display-italic" style={{ color: "var(--color-saffron)" }}>
+                  with one hostel
+                </span>{" "}
+                and a simple idea — that a place to stay can also feel like
+                home.
+              </h2>
+              <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl text-stone-700 leading-relaxed">
+                <p>
+                  Today we run three hostels in Lalpur: two for girls, one for
+                  boys. Hundreds of students, working professionals, and exam
+                  aspirants have called them home.
+                </p>
+                <p>
+                  Home-cooked meals. 24/7 security. Daily housekeeping. And a
+                  caring staff that treats every resident like family.
+                </p>
+              </div>
+              <Link
+                href="/about"
+                className="mt-10 inline-flex items-center gap-2 text-sm font-medium tracking-wide"
+                style={{ color: "var(--color-saffron)" }}
+              >
+                Read our full story
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-20 md:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-200 bg-white">
+      {/* Stats strip */}
+      <section
+        className="py-20 md:py-24 px-6 md:px-10 lg:px-14 border-y"
+        style={{
+          backgroundColor: "var(--color-cream-deep)",
+          borderColor: "var(--color-line)",
+        }}
+      >
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 mb-3">
-              Why residents choose us
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900">
-              Built around safety, food, and care
-            </h2>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-8">
             {[
+              { value: 3, suffix: "", label: "Hostels in Lalpur" },
               {
-                icon: Shield,
-                title: "Always secure",
-                description: "24/7 CCTV, guards at the door, strict visitor policy.",
+                value: 200,
+                suffix: "+",
+                label: "Residents hosted",
               },
+              { value: 5, suffix: ".0", label: "Average rating" },
               {
-                icon: Heart,
-                title: "Home-cooked food",
-                description: "Three meals a day. Veg & non-veg. Best food quality in Ranchi.",
+                value: 24,
+                suffix: "/7",
+                label: "Security & care",
               },
-              {
-                icon: Sparkles,
-                title: "Clean & maintained",
-                description: "Daily housekeeping. Hot water, RO drinking water, power backup.",
-              },
-              {
-                icon: Clock,
-                title: "Years of trust",
-                description: "Serving students and professionals across Ranchi for years.",
-              },
-            ].map((item) => (
-              <div key={item.title}>
-                <item.icon className="w-6 h-6 text-neutral-900 mb-4" strokeWidth={1.5} />
-                <h3 className="font-semibold text-neutral-900 mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-neutral-600 leading-relaxed">
-                  {item.description}
+            ].map((s) => (
+              <div key={s.label} className="text-center md:text-left">
+                <p
+                  className="font-display text-[clamp(2.75rem,6vw,4.5rem)] font-medium leading-none tracking-tight"
+                  style={{ color: "var(--color-ink)" }}
+                >
+                  <AnimatedCounter to={s.value} suffix={s.suffix} />
+                </p>
+                <p className="mt-3 text-[11px] uppercase tracking-[0.22em] text-stone-500">
+                  {s.label}
                 </p>
               </div>
             ))}
@@ -145,53 +145,190 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-20 md:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-200">
+      {/* Hostels grid */}
+      <section
+        id="hostels"
+        className="py-24 md:py-36 px-6 md:px-10 lg:px-14"
+      >
         <div className="max-w-7xl mx-auto">
-          <div className="mb-14">
-            <p className="text-xs font-medium uppercase tracking-wider text-neutral-500 mb-3">
-              Testimonials
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 md:mb-20">
+            <div className="max-w-3xl">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-stone-500 mb-5">
+                — Three places to call home
+              </p>
+              <h2 className="font-display text-[clamp(2.25rem,5.5vw,4.25rem)] leading-[1.04] tracking-tight font-medium">
+                Choose where you&apos;d like to{" "}
+                <span
+                  className="font-display-italic"
+                  style={{ color: "var(--color-saffron)" }}
+                >
+                  belong.
+                </span>
+              </h2>
+            </div>
+            <p className="text-stone-600 max-w-md text-base leading-relaxed">
+              Each hostel has its own personality, but they share the same
+              promise — clean rooms, warm food, and a family that looks out
+              for you.
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 max-w-2xl">
-              What our residents say
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14 md:gap-y-16">
+            {hostelsData.map((hostel, index) => (
+              <HostelCard key={hostel.id} hostel={hostel} index={index} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* What residents say — quote carousel */}
+      <section
+        className="py-24 md:py-36 px-6 md:px-10 lg:px-14 border-y"
+        style={{
+          backgroundColor: "var(--color-cream-deep)",
+          borderColor: "var(--color-line)",
+        }}
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+            <div className="lg:col-span-4">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-stone-500 mb-5">
+                — Voices from inside
+              </p>
+              <h2 className="font-display text-[clamp(2rem,4.5vw,3.5rem)] leading-[1.08] tracking-tight font-medium">
+                Real residents.
+                <br />
+                <span
+                  className="font-display-italic"
+                  style={{ color: "var(--color-saffron)" }}
+                >
+                  Real reviews.
+                </span>
+              </h2>
+              <p className="mt-6 text-stone-600 leading-relaxed text-sm">
+                Hear from {totalReviews}+ residents who&apos;ve made our
+                hostels their home in Ranchi.
+              </p>
+            </div>
+            <div className="lg:col-span-8">
+              <QuoteCarousel />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why us */}
+      <section className="py-24 md:py-36 px-6 md:px-10 lg:px-14">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16 md:mb-20">
+            <p className="text-[11px] uppercase tracking-[0.32em] text-stone-500 mb-5">
+              — Why residents stay
+            </p>
+            <h2 className="font-display text-[clamp(2rem,5vw,3.75rem)] leading-[1.08] tracking-tight font-medium max-w-3xl mx-auto">
+              Built around{" "}
+              <span
+                className="font-display-italic"
+                style={{ color: "var(--color-saffron)" }}
+              >
+                safety, food, and care.
+              </span>
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allReviews.slice(0, 6).map((review) => (
-              <ReviewCard
-                key={`${review.hostelName}-${review.id}`}
-                review={review}
-              />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-8">
+            {[
+              {
+                icon: Shield,
+                title: "Always secure",
+                description:
+                  "24/7 guard at the door, CCTV across the premises, strict visitor policy.",
+              },
+              {
+                icon: Utensils,
+                title: "Home-cooked food",
+                description:
+                  "Three meals a day. Veg & non-veg. Best food quality in Ranchi.",
+              },
+              {
+                icon: Sparkles,
+                title: "Clean & maintained",
+                description:
+                  "Daily housekeeping, hot water, RO drinking water, full power backup.",
+              },
+              {
+                icon: Heart,
+                title: "Years of trust",
+                description:
+                  "Serving students and professionals across Ranchi for years.",
+              },
+            ].map((item, i) => (
+              <div key={item.title} className="relative">
+                <span
+                  className="absolute -top-4 -left-1 font-display text-7xl text-stone-200 font-medium leading-none select-none pointer-events-none"
+                  aria-hidden
+                >
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className="relative pt-10">
+                  <item.icon
+                    className="w-6 h-6 mb-5"
+                    strokeWidth={1.5}
+                    style={{ color: "var(--color-saffron)" }}
+                  />
+                  <h3 className="font-display text-xl font-medium tracking-tight mb-2.5">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-stone-600 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-24 px-4 sm:px-6 lg:px-8 border-t border-neutral-200">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-neutral-950 rounded-3xl px-8 py-14 md:px-14 md:py-20 text-center">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white max-w-3xl mx-auto leading-tight">
-              Looking for a hostel in Ranchi?
-            </h2>
-            <p className="text-neutral-400 text-lg mt-5 max-w-xl mx-auto">
-              Book a room or schedule a visit. We&apos;ll show you around and
-              answer every question.
+      <section className="px-6 md:px-10 lg:px-14 pb-24 md:pb-36">
+        <div className="max-w-7xl mx-auto">
+          <div
+            className="relative overflow-hidden rounded-sm px-8 py-20 md:px-16 md:py-28 text-center"
+            style={{ backgroundColor: "var(--color-forest-deep)" }}
+          >
+            <div
+              className="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay"
+              style={{
+                backgroundImage:
+                  "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+              }}
+            />
+            <p className="relative text-[11px] uppercase tracking-[0.32em] text-amber-200/80 mb-6">
+              — Ready to visit?
             </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
-              <a
+            <h2 className="relative font-display text-white text-[clamp(2.25rem,5.5vw,4.5rem)] leading-[0.98] tracking-tight font-medium max-w-4xl mx-auto">
+              Come over for tea.
+              <br />
+              <span className="font-display-italic text-amber-200">
+                See your room.
+              </span>
+            </h2>
+            <p className="relative text-stone-300 text-base md:text-lg mt-6 max-w-xl mx-auto leading-relaxed">
+              Visit any of our hostels in Lalpur. We&apos;ll show you around
+              and answer every question.
+            </p>
+            <div className="relative mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+              <Link
                 href="/#hostels"
-                className="inline-flex items-center justify-center bg-white hover:bg-neutral-100 text-neutral-900 px-6 py-3 rounded-full font-medium transition-colors"
+                className="inline-flex items-center justify-center bg-amber-100 hover:bg-amber-200 text-stone-900 px-7 py-3.5 rounded-full font-medium transition-colors"
               >
                 Browse Hostels
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/contact"
-                className="inline-flex items-center justify-center border border-neutral-700 hover:border-neutral-500 text-white px-6 py-3 rounded-full font-medium transition-colors"
+                className="inline-flex items-center justify-center border border-white/30 hover:bg-white/10 text-white px-7 py-3.5 rounded-full font-medium transition-colors"
               >
-                Contact Us
-              </a>
+                Schedule a Visit
+              </Link>
             </div>
           </div>
         </div>

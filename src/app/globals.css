@@ -2,28 +2,63 @@
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-fraunces);
+
+  /* Brand palette */
+  --color-cream: #fbf8f3;
+  --color-cream-deep: #f5efe4;
+  --color-ink: #1c1917;
+  --color-ink-soft: #44403c;
+  --color-mute: #78716c;
+  --color-line: #e7e5e4;
+  --color-line-soft: #f0eee9;
+
+  --color-saffron: #b45309;
+  --color-saffron-deep: #9a3412;
+  --color-saffron-light: #fed7aa;
+
+  --color-forest: #14532d;
+  --color-forest-deep: #052e16;
+
+  --color-gender-girls: #ec4899;
+  --color-gender-boys: #3b82f6;
 }
 
 :root {
   color-scheme: light;
 }
 
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 html {
   scroll-behavior: smooth;
+  background-color: var(--color-cream);
 }
 
 body {
-  background-color: #fbf8f4;
-  color: #171717;
-  -webkit-font-smoothing: antialiased;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv01", "cv11";
   text-rendering: optimizeLegibility;
 }
 
-h1,
-h2,
-h3,
-h4 {
+/* Display font — Fraunces — used via .font-display utility */
+.font-display {
+  font-family: var(--font-display);
+  font-feature-settings: "ss01", "ss03";
   letter-spacing: -0.02em;
+}
+
+/* Strong italic for editorial display */
+.font-display-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-feature-settings: "ss01", "ss03";
+  letter-spacing: -0.025em;
 }
 
 a,
@@ -32,7 +67,90 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid #171717;
-  outline-offset: 2px;
+  outline: 2px solid var(--color-saffron);
+  outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* Selection */
+::selection {
+  background: var(--color-saffron);
+  color: white;
+}
+
+/* Decorative divider — small dot in middle of line */
+.divider-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.divider-dot::before,
+.divider-dot::after {
+  content: "";
+  height: 1px;
+  width: 2.5rem;
+  background-color: currentColor;
+  opacity: 0.3;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: #d6d3d1;
+  border-radius: 10px;
+  border: 2px solid var(--color-cream);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-mute);
+}
+
+/* Ken Burns slow zoom for hero slides */
+@keyframes kenburns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.12) translate(-1%, -1%);
+  }
+}
+
+.kenburns {
+  animation: kenburns 12s ease-out forwards;
+}
+
+/* Subtle entrance for editorial text reveal */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Marquee for the announcement strip if used */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 40s linear infinite;
+}
+
+/* Prevent layout shift on font load */
+html.fonts-loaded body {
+  visibility: visible;
 }

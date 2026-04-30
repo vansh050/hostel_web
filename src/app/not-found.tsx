@@ -3,29 +3,33 @@ import { Home, ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4">
-      <div className="text-center max-w-md">
-        <p className="text-sm font-medium uppercase tracking-wider text-neutral-500 mb-4">
-          404 · Not found
+    <div className="min-h-[75vh] flex items-center justify-center px-6 md:px-10">
+      <div className="text-center max-w-xl">
+        <p
+          className="font-display text-[clamp(7rem,18vw,14rem)] font-medium leading-none mb-6 tracking-tight"
+          style={{ color: "var(--color-saffron)" }}
+        >
+          404
         </p>
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900 mb-4 leading-tight">
-          This page doesn&apos;t exist.
+        <h1 className="font-display text-3xl md:text-4xl font-medium tracking-tight mb-5">
+          This page wandered off.
         </h1>
-        <p className="text-neutral-600 mb-10">
-          The page you are looking for may have been moved or deleted. Let us
-          help you find what you need.
+        <p className="text-stone-600 mb-10 leading-relaxed">
+          The page you are looking for may have moved or been deleted. Let us
+          help you find your way back.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/"
-            className="inline-flex items-center justify-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white px-6 py-3 rounded-full font-medium transition-colors"
+            className="inline-flex items-center justify-center gap-2 text-white px-7 py-3.5 rounded-full font-medium transition-colors"
+            style={{ backgroundColor: "var(--color-ink)" }}
           >
             <Home className="w-4 h-4" />
             Homepage
           </Link>
           <Link
             href="/contact"
-            className="inline-flex items-center justify-center gap-2 border border-neutral-300 hover:border-neutral-900 text-neutral-900 px-6 py-3 rounded-full font-medium transition-colors"
+            className="inline-flex items-center justify-center gap-2 border border-stone-300 hover:border-stone-900 text-stone-900 px-7 py-3.5 rounded-full font-medium transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Contact Us

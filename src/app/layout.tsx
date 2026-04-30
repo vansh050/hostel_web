@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Geist, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,16 +9,24 @@ import { BRAND_NAME } from "@/data/hostels";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lalpurhostels.com"), // TODO: Replace with your actual domain
+  metadataBase: new URL("https://lalpurhostels.com"),
   title: {
     default: `Best Hostels in Ranchi | ${BRAND_NAME} - Affordable PG & Hostel for Boys & Girls in Lalpur`,
     template: `%s | ${BRAND_NAME}`,
   },
   description:
-    "Looking for hostels in Ranchi? Lalpur Hostels offers 3 affordable, clean, and safe hostels & PG near Lalpur Chowk, Ranchi. Boys & girls hostel with meals, Wi-Fi, 24/7 security. Starting Rs 3,000/month. Book now!",
+    "Looking for hostels in Ranchi? Lalpur Hostels offers 3 affordable, clean, and safe hostels & PG near Lalpur Chowk, Ranchi. Boys & girls hostel with meals, Wi-Fi, 24/7 security. Starting ₹7,500/month. Book now!",
   keywords: [
     "hostel in ranchi",
     "hostels in ranchi",
@@ -53,13 +61,13 @@ export const metadata: Metadata = {
     siteName: BRAND_NAME,
     title: `Best Hostels & PG in Ranchi | ${BRAND_NAME} - Boys & Girls Hostel in Lalpur`,
     description:
-      "Safe, affordable boys & girls hostels & PG in Lalpur, Ranchi. Home-cooked meals, free Wi-Fi, 24/7 security. Starting Rs 3,000/month. Book now!",
+      "Safe, affordable boys & girls hostels & PG in Lalpur, Ranchi. Home-cooked meals, free Wi-Fi, 24/7 security. Starting ₹7,500/month. Book now!",
   },
   twitter: {
     card: "summary_large_image",
     title: `Best Hostels in Ranchi | ${BRAND_NAME}`,
     description:
-      "Safe, affordable boys & girls hostels in Lalpur, Ranchi. Starting Rs 3,000/month.",
+      "Safe, affordable boys & girls hostels in Lalpur, Ranchi. Starting ₹7,500/month.",
   },
   robots: {
     index: true,
@@ -83,8 +91,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased">
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${fraunces.variable} h-full`}
+    >
+      <body className="min-h-full flex flex-col">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

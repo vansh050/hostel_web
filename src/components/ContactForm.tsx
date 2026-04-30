@@ -18,7 +18,8 @@ export default function ContactForm() {
     e.preventDefault();
 
     const hostelName = formData.hostel
-      ? hostelsData.find((h) => h.id === formData.hostel)?.name || formData.hostel
+      ? hostelsData.find((h) => h.id === formData.hostel)?.name ||
+        formData.hostel
       : "Not specified";
 
     const whatsappMessage = `
@@ -39,25 +40,35 @@ Message: ${formData.message}
   };
 
   const inputClass =
-    "w-full px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-neutral-900 focus:border-neutral-900 outline-none transition-colors bg-white text-neutral-900 placeholder:text-neutral-400";
+    "w-full px-4 py-3.5 border border-stone-200 rounded-sm focus:ring-2 focus:ring-stone-900 focus:border-stone-900 outline-none transition-colors bg-white text-stone-900 placeholder:text-stone-400 text-[0.95rem]";
 
   if (submitted) {
     return (
-      <div className="bg-white rounded-2xl p-8 border border-neutral-200 text-center">
-        <CheckCircle className="w-14 h-14 text-neutral-900 mx-auto mb-4" strokeWidth={1.5} />
-        <h3 className="text-xl font-semibold text-neutral-900 mb-2">
-          Message sent
+      <div className="bg-white p-10 border border-stone-200 rounded-sm text-center">
+        <CheckCircle
+          className="w-14 h-14 mx-auto mb-5"
+          strokeWidth={1.25}
+          style={{ color: "var(--color-saffron)" }}
+        />
+        <h3 className="font-display text-2xl font-medium tracking-tight mb-3">
+          Message sent.
         </h3>
-        <p className="text-neutral-600 mb-6 text-sm">
-          Thank you for your enquiry. We will get back to you as soon as
-          possible.
+        <p className="text-stone-600 mb-6 text-sm">
+          Thank you for your enquiry. We will get back to you soon.
         </p>
         <button
           onClick={() => {
             setSubmitted(false);
-            setFormData({ name: "", phone: "", email: "", hostel: "", message: "" });
+            setFormData({
+              name: "",
+              phone: "",
+              email: "",
+              hostel: "",
+              message: "",
+            });
           }}
-          className="text-sm text-neutral-900 font-medium underline underline-offset-4 hover:no-underline"
+          className="text-sm font-medium underline underline-offset-4"
+          style={{ color: "var(--color-saffron)" }}
         >
           Send another message
         </button>
@@ -68,11 +79,14 @@ Message: ${formData.message}
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-2xl p-6 md:p-8 border border-neutral-200 space-y-5"
+      className="bg-white p-7 md:p-9 border border-stone-200 rounded-sm space-y-5"
     >
       <div>
-        <label htmlFor="name" className="block text-sm font-medium text-neutral-900 mb-1.5">
-          Your name <span className="text-rose-500">*</span>
+        <label
+          htmlFor="name"
+          className="block text-[10px] uppercase tracking-[0.22em] text-stone-500 mb-2"
+        >
+          Your name <span className="text-pink-500 normal-case">*</span>
         </label>
         <input
           type="text"
@@ -86,8 +100,11 @@ Message: ${formData.message}
       </div>
 
       <div>
-        <label htmlFor="phone" className="block text-sm font-medium text-neutral-900 mb-1.5">
-          Phone number <span className="text-rose-500">*</span>
+        <label
+          htmlFor="phone"
+          className="block text-[10px] uppercase tracking-[0.22em] text-stone-500 mb-2"
+        >
+          Phone number <span className="text-pink-500 normal-case">*</span>
         </label>
         <input
           type="tel"
@@ -101,8 +118,11 @@ Message: ${formData.message}
       </div>
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-neutral-900 mb-1.5">
-          Email <span className="text-neutral-400 font-normal">(optional)</span>
+        <label
+          htmlFor="email"
+          className="block text-[10px] uppercase tracking-[0.22em] text-stone-500 mb-2"
+        >
+          Email <span className="text-stone-400 normal-case">(optional)</span>
         </label>
         <input
           type="email"
@@ -115,7 +135,10 @@ Message: ${formData.message}
       </div>
 
       <div>
-        <label htmlFor="hostel" className="block text-sm font-medium text-neutral-900 mb-1.5">
+        <label
+          htmlFor="hostel"
+          className="block text-[10px] uppercase tracking-[0.22em] text-stone-500 mb-2"
+        >
           Interested in
         </label>
         <select
@@ -134,31 +157,36 @@ Message: ${formData.message}
       </div>
 
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-neutral-900 mb-1.5">
-          Your message <span className="text-rose-500">*</span>
+        <label
+          htmlFor="message"
+          className="block text-[10px] uppercase tracking-[0.22em] text-stone-500 mb-2"
+        >
+          Your message <span className="text-pink-500 normal-case">*</span>
         </label>
         <textarea
           id="message"
           required
           rows={4}
           value={formData.message}
-          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, message: e.target.value })
+          }
           className={`${inputClass} resize-none`}
-          placeholder="E.g., I am looking for a double sharing room from next month..."
+          placeholder="E.g., I am looking for a single room from next month..."
         />
       </div>
 
       <button
         type="submit"
-        className="w-full flex items-center justify-center gap-2 bg-neutral-900 hover:bg-neutral-800 text-white py-3.5 rounded-lg font-medium transition-colors"
+        className="w-full flex items-center justify-center gap-2 text-white py-3.5 rounded-full font-medium transition-colors"
+        style={{ backgroundColor: "var(--color-ink)" }}
       >
         <Send className="w-4 h-4" />
         Send enquiry via WhatsApp
       </button>
 
-      <p className="text-xs text-neutral-500 text-center">
-        This form sends your enquiry directly to our WhatsApp. We typically
-        respond within 30 minutes during business hours.
+      <p className="text-xs text-stone-500 text-center pt-2">
+        This form sends your enquiry directly to our WhatsApp.
       </p>
     </form>
   );
