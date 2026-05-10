@@ -40,3 +40,20 @@ def append_lead(hostel: str, name: str, phone: str, action: str) -> None:
     worksheet = sheet.worksheet(hostel)
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     worksheet.append_row([timestamp, name, phone, action, DEFAULT_ACTIONED_STATUS, ""])
+
+
+def read_all_leads():
+    """Read every row from every hostel tab and return a flat list."""
+    client = _get_client()
+    sheet_id = os.environ["SHEET_ID"]
+    spreadsheet = client.open_by_key(sheet_id)
+    leads = []
+    for tab_name in ("Muskan Girls Hostel", "Sanskriti Girls Hostel", "Sankalp Boys Hostel"):
+        worksheet = spreadsheet.worksheet(tab_name)
+        rows = worksheet.get_all_records()
+        for row in rows:
+            row["hostel"] = tab_name
+            leads.append(row)
+
+
+    return leads
