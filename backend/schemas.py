@@ -18,11 +18,12 @@ class LeadIn(BaseModel):
 
 
 class LoginIn(BaseModel):
-    """Validated input for POST /login."""
+    """Validated input for POST /login. Staff sends their email + the shared admin password."""
+
 
     model_config = ConfigDict(extra="forbid")
 
-    username: str = Field(..., min_length=1, max_length=50)
+    email: str = Field(..., min_length=3, max_length=100)
     password: str = Field(..., min_length=1, max_length=200)
 
 

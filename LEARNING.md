@@ -37,6 +37,15 @@ Architecture growing across phases:
 
 ## Session Diary (running log of micro-wins per day)
 
+### 2026-05-11 (late evening) — 🏆 M7.1 COMPLETE — Admin login flow + first frontend milestone shipped
+- ✅ **Backend rename** `username → email`: `schemas.py` LoginIn field renamed; `app.py` `/login` dropped the `ADMIN_USERNAME` compare, JWT `sub` now carries the typed email so audit logs (`lead.updated`) record which staff member acted. 5 curl tests verified: valid creds → 200+JWT, old field → 400 with both errors, wrong password → 401, random email + right password → 200 (proves email is a free-text label by design), missing email → 400.
+- ✅ **Next.js frontend shipped**: `/admin/login` (server page shell + `AdminLoginForm` client component), `/admin/dashboard` (auth-gated client shell with 3 hostel cards), `/admin/hostels/[slug]` (per-hostel placeholder for M7.2). Editorial design matches marketing site — Fraunces display, saffron single-accent hairline, cream backgrounds, no emoji, gender pill labels (pink/blue) on hostel cards.
+- ✅ **Route Group refactor** mid-milestone: realised the root layout was leaking the marketing Navbar/Footer/WhatsApp widget onto admin pages. Moved all marketing routes (`/`, `/about`, `/blog/*`, `/contact`, `/hostel/[id]`) into `src/app/(marketing)/` route group with its own layout; stripped root layout down to html/body/fonts/global metadata; gave admin its own thin layout with `robots: noindex`. URLs unchanged — `(marketing)` folder is invisible in the URL.
+- ✅ **Collab mode shifted mid-milestone**: for UI markup, Claude writes directly now; user focuses on conceptual understanding (saved as feedback memory). Backend code + core JS/React logic still typed by user.
+- 🪤 Real bug encountered: Next.js 16 changed dynamic route `params` from plain object to `Promise<{...}>`. Must `await params` inside async server components — exactly the "this is NOT the Next.js you know" warning from AGENTS.md.
+- 🎨 **Design refinement deferred**: will A/B against live Vercel marketing site after deploy rather than over-polish locally.
+- New concepts: **API contract breaking changes** (rename = breaking; coordinated client+server deploy because we control the only client); **`secrets.compare_digest`** as constant-time comparison vs timing attacks; **App Router file-system routing** (folder hierarchy = URL trie); **Server vs Client Components** in Next.js 16 — server is default, `"use client"` opts in at the leaf; "islands of interactivity" pattern (deepest `"use client"` boundary = smallest JS bundle); **page metadata exports** with `robots: { index: false }` for admin URLs; **Route Groups** `(marketing)/` invisible in URL, organizational layout-scoping pattern; **controlled inputs** (`useState` + `value` + `onChange` — JS state as single source of truth, "hotel reception logbook" analogy); **async event handlers** with try/catch/finally (state machine: idle/loading/error); **loading state UX** (disable button + change label) and **clear-error-on-edit** UX; **`useRouter` from `next/navigation`** (NOT `next/router` — that's Pages Router); **`router.push` vs `router.replace`** (replace = no history entry, avoids back-button loops); **client-side auth gate via `useEffect`** with `checked` flag to prevent protected-content flash; **localStorage XSS trade-off** (intentional; deliberate upgrade target later); **Next.js 16 `params` as Promise** in dynamic routes (await before destructure).
+
 ### 2026-05-11 (evening) — 🏆 M6.2 COMPLETE — GET /admin/stats (single GROUP BY query)
 - ✅ Designed response shape first (before code): picked wide-form flat list `{"stats": [{hostel_id, hostel, total, actioned, pending}, ...]}` over name-keyed dict or long-form rows. Reason: trivial to `.map()` in React, stable order, no need for the frontend to know hostel names upfront. Concept: response shape is API design — wide-form for "iterate and render cards", long-form for charting/Plotly. Real-world analogy: class register vs name-keyed roster.
 - ✅ `_stats_per_hostels()` helper using **SQLAlchemy Core** (not ORM — first time on this project). `select(Hostel.id.label("hostel_id"), Hostel.name.label("hostel"), func.count(Lead.id).label("total"), func.count(Lead.id).filter(Lead.actioned).label("actioned")).select_from(Hostel).outerjoin(Lead, Lead.hostel_id == Hostel.id).group_by(Hostel.id, Hostel.name).order_by(Hostel.id)`. `pending` computed in Python (`total - actioned`) — single source of truth, frontend never subtracts.
@@ -229,10 +238,20 @@ When Project 1 wraps, read that file → decide → kick off Project 2.
 - [x] **M6.2:** `GET /admin/stats` ✅ COMPLETE 2026-05-11 — per-hostel total/actioned/pending via LEFT JOIN + GROUP BY + Postgres FILTER aggregate (one query, no N+1)
 - [ ] **M6.3 (optional):** Lead history audit table — track who changed what when
 
-### Phase 5 — Admin Portal Frontend (NEW)
-- [ ] **M7.1:** Next.js admin login page → POST `/login` → store JWT → redirect dashboard
-- [ ] **M7.2:** Dashboard with per-hostel tabs, lead table, action toggle, remarks inline edit (calls PATCH M6.1)
-- [ ] **M7.3:** Stats cards on dashboard (calls M6.2), polish + deploy to Vercel
+### Phase 5 — Admin Portal Frontend (NEW — re-scoped 2026-05-11 to ship in 5 thin slices)
+**Auth model decision (2026-05-11):** Shared-password + email-as-label. Backend renames `username` → `email`, drops the username check, keeps a single `ADMIN_PASSWORD` env var. JWT `sub` carries the typed email so audit logs show *which staff member* actioned each lead. Upgrade to per-staff auth = StaySense (Project 2) scope.
+
+**Design direction:** Editorial — Fraunces display headings, saffron single-accent, cream backgrounds, no heavy shadows, no emoji icons, Lucide line icons only. Numbers shown as typographic pull-quotes, hostel names as tracked-out uppercase eyebrow labels. Login page = minimal centered card; dashboard = stacked per-hostel cards with lead rows.
+
+**Design refinement strategy (2026-05-11):** M7.1 ships *directionally* on-brand using existing design tokens; we'll do a visual A/B pass against the live marketing site (Vercel) after deploy to tighten spacing/proportions/details. Don't over-design before seeing both side-by-side in production.
+
+- [x] **M7.1:** ✅ COMPLETE 2026-05-11 — Backend `username → email` rename + `/admin/login` page + `/admin/dashboard` placeholder with 3 hostel cards + `/admin/hostels/[slug]` dynamic route placeholder. Route Group refactor isolates marketing chrome from admin.
+- [ ] **M7.2:** `/admin/dashboard` — read-only fetch of `/admin/leads` + `/admin/stats`, render per-hostel cards with lead rows (no editing, no filters yet)
+- [ ] **M7.3:** Inline editing on dashboard — toggle `actioned`, edit `remarks` (calls existing PATCH `/admin/leads/<id>`)
+- [ ] **M7.4:** Filters — time window (30/60/90 days, default 30), search by name, "unactioned only" toggle. May require small backend `?since=&unactioned=` query params or do client-side if dataset stays small.
+- [ ] **M7.5:** Polish + deploy admin frontend to Vercel (same project as marketing site or separate sub-route — TBD)
+
+**Token storage decision (2026-05-11):** localStorage (not httpOnly cookie). Reason: matches existing client-fetch pattern, 1 admin + a few staff, no third-party scripts on admin pages — practical XSS risk is low for this app. Flagged as a deliberate upgrade target if scale/threat-model changes. Switching to httpOnly cookies later = ~1-2 hour refactor.
 
 🎯 **Admin portal checkpoint:** You log into your own dashboard from your phone and update lead status during a call.
 

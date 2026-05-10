@@ -162,26 +162,25 @@ def login():
     data = request.get_json(silent=True)
     if data is None:
         return jsonify({"error": "Request body must be JSON"}), 400
-
     creds = LoginIn(**data)
 
-    valid_user = secrets.compare_digest(creds.username, ADMIN_USERNAME)
     valid_pass = secrets.compare_digest(creds.password, ADMIN_PASSWORD)
-    if not (valid_user and valid_pass):
+    if not valid_pass:
         log.warning("login.failed", extra={
-            "username": creds.username,
+            "email": creds.email,
             "ip": get_remote_address(),
         })
         return jsonify({"error": "Invalid credentials"}), 401
     now = dt.datetime.now(dt.timezone.utc)
     payload = {
-        "sub": creds.username,
+        "sub": creds.email,
         "iat": now,
         "exp": now + dt.timedelta(hours=JWT_EXP_HOURS),
     }
     token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGO)
 
-    log.info("login.success", extra={"username": creds.username})
+    log.info("login.success", extra={"email": creds.email})
+
     return jsonify({
         "access_token": token,
         "token_type": "bearer",
@@ -360,7 +359,6 @@ def admin_stats():
         "hostel_count": len(stats),
     })
     return jsonify({"stats": stats}), 200
-
 
 @app.route("/lead", methods=["POST"])
 @limiter.limit("5 per minute")
