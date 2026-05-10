@@ -9,7 +9,7 @@ from pydantic import ValidationError
 import datetime as dt
 import secrets
 import jwt
-from schemas import LeadIn, LoginIn
+from schemas import LeadIn, LoginIn, LeadUpdate
 from dotenv import load_dotenv
 from functools import wraps
 
@@ -283,6 +283,41 @@ def list_admin_leads():
         "source": source,
     })
     return jsonify({"leads": leads, "count": len(leads), "source": source}), 200
+
+
+@app.route("/admin/leads/<int:lead_id>", methods=["PATCH"])
+@limiter.limit("30 per minute")
+@require_auth
+def update_lead(lead_id):
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"error": "Request body must be JSON"}), 400
+
+    update = LeadUpdate(**data)
+
+    with SessionLocal() as session:
+        lead = session.get(Lead, lead_id)
+        if lead is None:
+            return jsonify({"error": "Lead not found"}), 404
+
+        changes = update.model_dump(exclude_unset=True)
+        if not changes:
+            return jsonify({"error": "No fields to update"}), 400
+
+        for field, value in changes.items():
+            setattr(lead, field, value)
+        session.commit()
+
+        log.info("lead.updated", extra={
+            "lead_id": lead.id,
+            "username": g.user["sub"],
+            "fields_changed": list(changes.keys()),
+        })
+        return jsonify({
+            "id": lead.id,
+            "actioned": lead.actioned,
+            "remarks": lead.remarks,
+        }), 200
 
 
 @app.route("/lead", methods=["POST"])
