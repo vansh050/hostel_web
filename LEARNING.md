@@ -37,6 +37,15 @@ Architecture growing across phases:
 
 ## Session Diary (running log of micro-wins per day)
 
+### 2026-05-11 (evening) — 🏆 M6.2 COMPLETE — GET /admin/stats (single GROUP BY query)
+- ✅ Designed response shape first (before code): picked wide-form flat list `{"stats": [{hostel_id, hostel, total, actioned, pending}, ...]}` over name-keyed dict or long-form rows. Reason: trivial to `.map()` in React, stable order, no need for the frontend to know hostel names upfront. Concept: response shape is API design — wide-form for "iterate and render cards", long-form for charting/Plotly. Real-world analogy: class register vs name-keyed roster.
+- ✅ `_stats_per_hostels()` helper using **SQLAlchemy Core** (not ORM — first time on this project). `select(Hostel.id.label("hostel_id"), Hostel.name.label("hostel"), func.count(Lead.id).label("total"), func.count(Lead.id).filter(Lead.actioned).label("actioned")).select_from(Hostel).outerjoin(Lead, Lead.hostel_id == Hostel.id).group_by(Hostel.id, Hostel.name).order_by(Hostel.id)`. `pending` computed in Python (`total - actioned`) — single source of truth, frontend never subtracts.
+- ✅ Three load-bearing decisions in the query: **(1)** `func.count(Lead.id)` not `COUNT(*)` — with LEFT JOIN, the NULL row for zero-lead hostels would have inflated `COUNT(*)` to 1 but `COUNT(col)` correctly returns 0. **(2)** Postgres `.filter(Lead.actioned)` (FILTER clause) for conditional COUNT instead of portable `SUM(CASE WHEN...)`. **(3)** `LEFT JOIN` from hostels so zero-lead hostels still appear with 0/0 (verified: Sanskriti + Sankalp show up in response even with no leads).
+- ✅ `GET /admin/stats` route — `@require_auth` + `@limiter.limit("60 per minute")`. Logged `admin.stats.viewed` (an *access* log, not audit — no state change). Returns 200 with the list.
+- 🧪 End-to-end tested locally: no-auth → 401, with-auth → all 3 hostels, PATCH-then-restats reflects updated counts live (flipped `actioned: true→false`, stats showed `actioned: 1→0, pending: 0→1`).
+- New concepts: **GET vs POST semantics** (idempotent, cacheable by browsers/CDNs, safe to retry; POST is none of those); **GROUP BY collapses N rows into 1-per-group** + aggregate functions (`COUNT`, `SUM`, `AVG`); **hash aggregation** as DSA pattern — one O(n) pass building `{group_key: counters}` hash map, exactly what Postgres's `HashAggregate` does (vs `GroupAggregate` for large groups via sort-then-fold); **N+1 anti-pattern** — looping N count queries instead of one GROUP BY (150ms × 100 vs 150ms × 1); **`COUNT(*)` vs `COUNT(column)` NULL handling** in LEFT JOIN context; **Postgres FILTER clause** as cleaner alternative to `SUM(CASE WHEN...)`; **SQLAlchemy Core vs ORM** — Core for aggregates returning computed rows, ORM for fetch-and-mutate; **`.label()`** for naming projected columns so `row.foo` works; **server-side derived fields** (`pending = total - actioned`) — single source of truth philosophy; **wide-form vs long-form response shape** design trade-off.
+- 📦 Phase 4 backend now **feature-complete** — admin API has login + list + patch + stats. Ready to build Next.js frontend against it.
+
 ### 2026-05-11 — 🏆 M6.1 COMPLETE — PATCH /admin/leads/<id> shipped + audit-logged
 - ✅ Step 1: `LeadUpdate` Pydantic schema in `schemas.py` — `Optional[bool] actioned`, `Optional[str] remarks` (max_length=1000), `model_config = ConfigDict(extra="forbid")`.
 - ✅ Step 2: `@app.route("/admin/leads/<int:lead_id>", methods=["PATCH"])` skeleton with `@limiter.limit("30 per minute")` + `@require_auth`. Sanity-tested routing layer: no auth → 401, non-int path → 404 from Flask's `<int:>` converter (before any handler code runs), invalid JWT → 401.
@@ -217,7 +226,7 @@ When Project 1 wraps, read that file → decide → kick off Project 2.
 
 ### Phase 4 — Admin Portal Backend (NEW — replaces old Phase 4 distributed-systems plan in admin-portal scope)
 - [x] **M6.1:** `PATCH /admin/leads/<id>` ✅ COMPLETE 2026-05-11 — mark actioned + edit remarks, auth-gated, audit-logged, validation + 404 + partial-update via `exclude_unset`, all 5 paths tested against prod Render Postgres
-- [ ] **M6.2:** `GET /admin/stats` — per-hostel counts (total / actioned / pending) via SQL `GROUP BY`
+- [x] **M6.2:** `GET /admin/stats` ✅ COMPLETE 2026-05-11 — per-hostel total/actioned/pending via LEFT JOIN + GROUP BY + Postgres FILTER aggregate (one query, no N+1)
 - [ ] **M6.3 (optional):** Lead history audit table — track who changed what when
 
 ### Phase 5 — Admin Portal Frontend (NEW)

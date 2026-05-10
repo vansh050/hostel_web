@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 from functools import wraps
 
 import sheets
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.orm import joinedload
 from db import SessionLocal
 from models import Hostel, Lead
@@ -224,6 +224,36 @@ def require_auth(view_func):
     return wrapper
 
 
+def _stats_per_hostels():
+    """One GROUP BY query: per-hostel total + actioned counts. LEFT JOIN
+    so hostels with zero leads still appear with 0/0."""
+    with SessionLocal() as session:
+        stmt = (
+            select(
+                Hostel.id.label("hostel_id"),
+                Hostel.name.label("hostel"),
+                func.count(Lead.id).label("total"),
+                func.count(Lead.id).filter(Lead.actioned).label("actioned"),
+
+            )
+            .select_from(Hostel)
+            .outerjoin(Lead, Lead.hostel_id == Hostel.id)
+            .group_by(Hostel.id, Hostel.name)
+            .order_by(Hostel.id)
+        )
+        rows = session.execute(stmt).all()
+        return [
+            {
+                "hostel_id": row.hostel_id,
+                "hostel": row.hostel,
+                "total": row.total,
+                "actioned": row.actioned,
+                "pending": row.total - row.actioned,
+            }
+            for row in rows
+        ]
+
+
 def _read_leads_postgres():
     """One JOIN query: leads + their hostel name. Eager-loaded to avoid N+1."""
     with SessionLocal() as session:
@@ -318,6 +348,18 @@ def update_lead(lead_id):
             "actioned": lead.actioned,
             "remarks": lead.remarks,
         }), 200
+
+
+@app.route("/admin/stats", methods=["GET"])
+@limiter.limit("60 per minute")
+@require_auth
+def admin_stats():
+    stats = _stats_per_hostels()
+    log.info("admin.stats.viewed", extra={
+        "Username": g.user["sub"],
+        "hostel_count": len(stats),
+    })
+    return jsonify({"stats": stats}), 200
 
 
 @app.route("/lead", methods=["POST"])
