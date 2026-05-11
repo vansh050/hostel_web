@@ -125,12 +125,35 @@ The project is the natural extension of Project 1 (Lalpur Hostels) — same doma
 - Webhooks (payment integration optional)
 - Monitoring: Prometheus + Grafana on Docker
 
-### Phase 4 — GenAI features at scale (~5 weeks)
+### Phase 4 — GenAI features at scale (~5 weeks) — expanded with modern stack
+**Core features:**
 - Per-tenant RAG: each hostel's policies/FAQs → its own vector index
-- Tenant-aware chatbot
-- LLM agent with function calling (query DB live)
+- Tenant-aware chatbot with streaming responses (SSE / WebSocket)
+- LLM agent with function calling (query DB live, check availability, book tour)
+- Multi-step agentic workflows (planner + executor pattern)
 - Review sentiment analysis (HuggingFace transformers)
-- Evaluation framework (golden dataset, LLM-as-judge)
+- Voice AI: hostel inquiry call routed to AI receptionist (Whisper STT → Claude → ElevenLabs TTS), optional
+- Multimodal: photo-based hostel comparison ("which is closer to the park?") — vision-capable LLM
+
+**Modern stack to learn here (added 2026-05-11 per Pratik):**
+- **LangChain / LangGraph** — agent framework, chains, memory, tools. LangGraph specifically for stateful multi-step workflows.
+- **LlamaIndex** — alternative RAG framework with strong indexing primitives. Pick one of LangChain/LlamaIndex per use case; don't use both as glue.
+- **MCP (Model Context Protocol)** — Anthropic's open standard for connecting LLMs to data sources/tools. Build StaySense as an MCP server so any AI client can query hostel data.
+- **Fine-tuning + LoRA/PEFT** — fine-tune a small model (Llama 3 / Mistral) on hostel domain Q&A. LoRA keeps cost low.
+- **Hybrid retrieval** — combine BM25 (lexical) + dense embeddings + re-ranker (Cohere Rerank or BGE-reranker). Single dense retrieval is the 2024 baseline; hybrid is the 2026 default.
+- **GraphRAG** — entity-graph-augmented RAG for structured domain queries ("hostels near campus X with mess included").
+- **Local LLMs** — Ollama / llama.cpp for on-device inference. Cheap, private, but slower. Useful for non-critical features.
+- **Vector DB choice** — Qdrant (recommended: open-source, scales, multi-tenant friendly) vs Pinecone (managed, $) vs Weaviate vs Chroma (dev-only) vs Milvus.
+- **Embeddings** — OpenAI text-embedding-3, Cohere embed-v3, or BGE (open-source). Pick one consistent model per project; switching mid-flight invalidates the whole index.
+- **Streaming responses** — SSE from FastAPI to the browser; never make users wait 5s for full LLM output.
+- **Guardrails** — input/output validation (Guardrails AI, NeMo Guardrails) — block prompt injection, PII leaks, off-topic responses.
+- **Evaluation** — LLM-as-judge (Claude evaluating Claude), RAGAS for RAG metrics, LangSmith for trace inspection. Build a golden dataset of 50-100 Q&A pairs early.
+
+**Concept-to-feature mapping:**
+- "AI receptionist for hostel inquiries" → Whisper + Claude + ElevenLabs + function calling
+- "Recommend hostels for a student looking for budget girls' PG with mess near MIT Ranchi" → hybrid retrieval + re-rank + agent + structured output
+- "Why did the model recommend Muskan over Sanskriti?" → LangSmith trace + explanation chain
+- "Don't recommend competitor hostels in the chatbot" → guardrails + tenant-scoped retrieval
 
 ### Phase 5 — Scale & production (~3 weeks)
 - nginx config: SSL, rate limiting, load balancing
@@ -192,11 +215,23 @@ Same multi-tenant pattern as StaySense, but for tutors/coaching centers in Ranch
 
 Don't binge. ~30 min/week is plenty. The real learning happens when building.
 
+**Infrastructure side:**
 - **System Design:** *"System Design Interview"* by Alex Xu — covers everything Project 2 uses
 - **nginx:** Official Beginner's Guide — nginx.org/en/docs/beginners_guide.html
 - **Docker:** docs.docker.com/get-started
 - **Multi-tenancy:** Search "multi-tenant SaaS architecture" — read 3-4 articles
 - **FastAPI:** fastapi.tiangolo.com/tutorial/ (better than Flask docs for learning async patterns)
+
+**AI / GenAI side (added 2026-05-11):**
+- **LangChain docs:** python.langchain.com — start with "Tutorials → Chatbot" and "Tutorials → Agent"
+- **LangGraph:** langchain-ai.github.io/langgraph/ — stateful agents; do this AFTER plain LangChain
+- **MCP spec:** modelcontextprotocol.io — short, read in one sitting
+- **Anthropic Engineering blog:** anthropic.com/engineering — prompt caching, tool use, agent patterns
+- **OpenAI Cookbook:** github.com/openai/openai-cookbook — production patterns, even if using Claude
+- **RAG techniques:** "Advanced RAG" series by LlamaIndex blog; Pinecone learning center
+- **Vector search math:** 1-hour read on cosine similarity vs Euclidean vs dot-product — understand WHY embeddings work
+- **LLM fine-tuning:** HuggingFace course Chapter 7 (free) — fine-tune a small classifier first, then try LoRA
+- **Evaluation:** RAGAS docs + "LLM evals" by Hamel Husain (blog post) — without evals you're flying blind
 
 ---
 
