@@ -1,54 +1,59 @@
-# Project 2 Roadmap — "StaySense"
+# Project 2 Roadmap — "Dreamjobcometrue"
 
-> **Status (2026-05-12):** ACTIVELY KICKING OFF. Pratik shipped Project 1 (Lalpur Hostels admin portal) the previous night and rolled directly into Project 2 the same week.
+> **Status (2026-05-12):** ACTIVELY KICKING OFF. Pratik pivoted from StaySense to a job-discovery/recommendation product on 2026-05-12 immediately after shipping Project 1. Same modern AI stack, different domain.
 >
-> **Working model:** Pratik types every line of code. Claude teaches concepts (with real-world + DSA analogies), gives code blocks for Pratik to type into files, reviews after, and never writes via Edit/Write unless explicitly asked. The footer `📚 Phase N · M X.Y · Step a/b` appears on every learning-session reply.
+> **Working model:** Pratik types every line of code. Claude teaches concepts (with real-world + DSA analogies), gives code blocks for Pratik to type into files, reviews after, never writes via Edit/Write unless explicitly asked. The footer `📚 Phase N · M X.Y · Step a/b` appears on every learning-session reply.
 
 ---
 
 ## TL;DR
 
-**StaySense** is a real-time, multi-tenant, AI-native hostel/PG recommendation platform for Indian Tier-2/3 cities. Pratik's 3 hostels (Muskan, Sanskriti, Sankalp) become tenants #1-3. Other hostel owners onboard. Students/workers find their match via:
+**Dreamjobcometrue** is a B2C, AI-native job-discovery platform for Indian job seekers (students + early-career professionals). User uploads resume → picks interests + dream companies → the system continuously surfaces matching, recently-posted jobs from a curated set of company career pages and job board APIs, ranked personally to that user, with AI-written cover letter drafts and one-screen "why this fits you" explanations.
 
-- **ML-driven recommendations** (filter → embeddings → hybrid retrieval → re-rank → personalize)
-- **Per-tenant AI chatbots** (RAG over each hostel's policies + agent function-calling into the DB)
-- **AI receptionist** (voice → STT → agent → TTS, optional)
-- **Tenant admin dashboards** with their own analytics, lead pipelines, review summaries
+The pivot from StaySense is **purely domain**. Every concept in the original plan transfers; this domain *adds* a few (document parsing, NER, web scraping mechanics, notification systems).
 
-**Stack jump from Project 1:** Flask → FastAPI; single-tenant → multi-tenant; single instance → load-balanced + Redis-cached; no jobs → Celery; no AI → deep GenAI stack (LangChain/LangGraph/MCP/RAG/agents/evals/fine-tuning).
+**User flow (the north star):**
+1. User signs up, uploads PDF/DOCX resume
+2. System parses + extracts skills, experience, dream-company list, salary expectations, location preferences
+3. Continuously scrapes/ingests fresh job postings from curated sources (company career pages + APIs)
+4. Match: hybrid retrieval (BM25 + dense embeddings + RRF + re-rank) ranks jobs personally
+5. Daily/weekly digest email — "5 new jobs matching you" with AI-generated explanation per job
+6. One-click "draft cover letter" via LLM agent that reads resume + JD + writes tailored cover
+7. Track applications (status, follow-up reminders) — stays on the platform after applying
 
-**Estimated timeline:** ~20-22 weeks (~5 months @ 6 hrs/wk). Realistic: longer, because the AI parts have steep learning curves and there's no rush.
+**Stack jump from Project 1:** Flask → FastAPI; single admin → multi-user with strict per-user data isolation; single instance → load-balanced + Redis-cached; no jobs → Celery (job scraping + notification fan-out); no AI → deep GenAI (LangChain/LangGraph/MCP/RAG/agents/evals/fine-tuning).
+
+**Estimated timeline:** ~20-22 weeks (~5 months @ 6 hrs/wk). Buffer assumed.
 
 ---
 
 ## What you already bring from Project 1 (do NOT re-teach)
 
-Pratik shipped a full-stack product end-to-end. He has working hands-on knowledge of:
+Pratik shipped a full-stack product end-to-end. He has hands-on knowledge of:
 
 | Concept | Where he used it in Project 1 |
 |---|---|
 | **Python + Flask** | Backend API, routes, decorators |
-| **Pydantic** | Request validation, `extra="forbid"`, partial updates with `model_dump(exclude_unset=True)` |
-| **Postgres + SQLAlchemy ORM + Core** | Hostels/Leads schema, `session.get` (identity map), `select().filter().join()`, GROUP BY + LEFT JOIN + FILTER aggregates |
+| **Pydantic** | Validation, `extra="forbid"`, `model_dump(exclude_unset=True)` |
+| **Postgres + SQLAlchemy ORM + Core** | Hostels/Leads schema, `session.get`, `select().join()`, GROUP BY + LEFT JOIN + FILTER |
 | **Alembic migrations** | Versioned schema, autogenerate, configparser interpolation gotcha |
-| **JWT auth** | Login, `secrets.compare_digest`, `@require_auth` decorator, JWT subject for audit trails |
-| **Audit logging** | Structured JSON logs, log-after-commit ordering, PII-safe field-names-only |
-| **HTTP semantics** | GET vs POST vs PATCH vs PUT, 4xx vs 5xx, 404 vs 400 distinction |
-| **CORS** | Flask-CORS, allowlist, stable origins not per-deploy URLs |
+| **JWT auth** | Login, `secrets.compare_digest`, `@require_auth`, JWT subject for audit trails |
+| **Audit logging** | Structured JSON logs, log-after-commit, PII-safe field-names-only |
+| **HTTP semantics** | GET/POST/PATCH/PUT, 4xx vs 5xx, 404 vs 400 distinction |
+| **CORS** | Allowlist, stable origins not per-deploy URLs |
 | **Rate limiting** | Flask-Limiter, decorator stack order |
-| **dotenv + 12-factor config** | `os.environ["X"]` fail-fast vs `.get()`, dev/prod isolation |
-| **Google Sheets API** | OAuth service account, dual-write pattern |
-| **Render deploy** | gunicorn + Procfile, env vars, cold-start lazy init, free-tier limits |
-| **Next.js 16 App Router** | File-system routing, server vs client components, route groups, metadata, params as Promise |
-| **React hooks** | `useState`, `useEffect` + cleanup, `useMemo` for memoization, custom hooks, rules of hooks |
-| **React patterns** | Controlled inputs, async event handlers with try/catch/finally, optimistic updates, `{data, loading, error}` triple, AbortController cleanup |
-| **TypeScript** | Generic types, union types, type narrowing with `"in"`, type-only imports |
-| **Tailwind v4** | `@theme` block, CSS custom properties, utility-first composition |
-| **Vercel deploy** | Per-commit deployment URLs vs stable production domain, NEXT_PUBLIC_ env vars, mixed-content blocking |
-| **Git** | 3-tree model, route group refactor with proper `git mv` vs partial `git add`, force-push danger |
-| **PowerShell + curl debugging** | `--data-binary "@file"` pattern, `$TOKEN` variable, JWT decoding |
+| **dotenv + 12-factor config** | Fail-fast envs, dev/prod isolation |
+| **Render deploy** | gunicorn + Procfile, env vars, free-tier cold-start, lazy init |
+| **Next.js 16 App Router** | File-system routing, server vs client, route groups, params as Promise |
+| **React hooks** | `useState`, `useEffect` + cleanup, `useMemo`, custom hooks, rules of hooks |
+| **React patterns** | Controlled inputs, async handlers, optimistic updates, `{data,loading,error}` triple, AbortController |
+| **TypeScript** | Generics, unions, type narrowing, type-only imports |
+| **Tailwind v4** | `@theme`, CSS custom props |
+| **Vercel deploy** | Per-commit vs stable URLs, NEXT_PUBLIC_ env vars, mixed-content blocking |
+| **Git** | 3-tree model, route-group refactor lessons |
+| **PowerShell + curl debugging** | `--data-binary "@file"`, `$TOKEN`, JWT decode |
 
-Project 2 **builds on top** of these. We will not re-explain `useState` or what JWT is. When Project 1 already taught a concept, Claude says "you know this from M6.1" and moves on.
+Project 2 builds *on top* of these. Claude says "you know this from M6.1" and moves on.
 
 ---
 
@@ -57,49 +62,59 @@ Project 2 **builds on top** of these. We will not re-explain `useState` or what 
 ### Infrastructure & systems
 - **FastAPI** (async Python, type-first, OpenAPI for free)
 - **Async Python** (`async`/`await`, async DB drivers, async iteration)
-- **Multi-tenancy** — schemas for it (shared-DB shared-schema with `tenant_id` column, vs shared-DB separate-schema, vs DB-per-tenant) + Postgres Row-Level Security (RLS)
-- **Subdomain or path-based tenant resolution** (`muskan.staysense.app` vs `staysense.app/t/muskan`)
-- **Redis** — caching layer, session store, pub/sub, rate-limit backend, Celery broker
-- **Celery** — task queue, workers, scheduled jobs (Celery Beat), retries, dead-letter queues
+- **Per-user data isolation** — every domain row has `user_id`, app filters by it AND Postgres Row-Level Security (RLS) policies enforce as a second line of defense
+- **Redis** — cache, session store, pub/sub, rate-limit backend, Celery broker
+- **Celery** — task queue, workers, scheduled scraping jobs (Celery Beat), retries, dead-letter queues
 - **Docker + Docker Compose** — containerize each service, multi-service local stack
-- **nginx** — reverse proxy, SSL termination, rate limiting, load balancing across FastAPI workers
-- **CI/CD** — GitHub Actions: lint, test, build container, deploy
-- **Observability** — Sentry, OpenTelemetry tracing, Prometheus metrics, Grafana dashboards, structured logs aggregator
-- **Database** — connection pooling (pgbouncer), read replicas (optional), index strategy with EXPLAIN, partial indexes, query plan reading
-- **Zero-downtime deploys** — blue-green via GitHub Actions, backwards-compatible migrations
-- **Production secrets** — Doppler / Render env / Vercel env, secret rotation hygiene
+- **nginx** — reverse proxy, SSL, rate limiting, load balancing across FastAPI workers
+- **CI/CD** — GitHub Actions: lint, typecheck, test, build container, deploy
+- **Observability** — Sentry, OpenTelemetry tracing, Prometheus metrics, Grafana, structured logs
+- **Database** — connection pooling (pgbouncer), index strategy with EXPLAIN, partial indexes, query plan reading
+- **Zero-downtime deploys** — blue-green, backwards-compatible migrations
+- **Object storage** — S3-compatible (Cloudflare R2 / Render disks) for raw resume files; metadata in Postgres
+- **Encryption at rest** — resumes contain PII (phone, address); column-level encryption or whole-file encryption
+
+### NEW in this domain (not in StaySense plan)
+- **Document parsing** — PDF/DOCX → structured text. Tools: `pdfplumber`, `Unstructured`, vision-capable LLMs as fallback. Robust to messy resume formats.
+- **Named Entity Recognition (NER)** — extract skills, companies, dates, locations, education from resume + JD text. Tools: spaCy (lightweight), HuggingFace transformers (powerful), or LLM-based extraction with structured output.
+- **Web scraping mechanics** — Playwright (headless browser for JS-rendered pages), `httpx` for static, `BeautifulSoup` for parsing, polite rate-limiting (1 req/sec/host), respecting `robots.txt`, rotating user-agents.
+- **Anti-bot evasion concepts** — fingerprint randomization, residential proxies, headless detection. Learn the *mechanics* on a sandbox site; production uses only ToS-clean sources.
+- **Job board API integration** — Greenhouse boards (`boards.greenhouse.io/<company>`) and Lever boards have free public APIs; Indeed has partial API; SerpAPI/RSS for breadth.
+- **Notification systems** — transactional email (Resend / Postmark / Mailgun), WhatsApp Business API (Twilio), scheduled digest delivery via Celery Beat.
+- **Personalization with cold-start** — new users with no click history; bootstrap from resume-only matching, refine as click signals accumulate.
 
 ### Machine Learning
-- **Embeddings** — what they are mathematically (vectors in ~1500-d space), cosine vs Euclidean vs dot-product
-- **Vector databases** — Qdrant (recommended for multi-tenant), Pinecone, Weaviate, Milvus, Chroma; index types (HNSW, IVF)
-- **Semantic search** — turn queries into vectors, find nearest neighbors
-- **Hybrid retrieval** — BM25 (lexical) + dense vectors fused with Reciprocal Rank Fusion
-- **Re-ranking** — Cohere Rerank or BGE-reranker as a second-stage filter
-- **Classical ML for ranking** — sklearn / PyTorch, click-through-rate prediction, LightGBM
-- **Content-based vs collaborative filtering** — pros/cons
-- **Recommendation systems** — implicit feedback, cold-start, exploration vs exploitation
-- **Evaluation metrics** — precision@k, recall@k, MRR, NDCG
+- **Embeddings** — vectors in ~1500-d space, cosine vs Euclidean vs dot-product
+- **Vector databases** — Qdrant (recommended), pgvector (start here, free), Pinecone, Weaviate
+- **Semantic search** — resume + JD as vectors, cosine similarity
+- **Hybrid retrieval** — BM25 (lexical: "Python", "ML Engineer") + dense (semantic: resume vs JD) + Reciprocal Rank Fusion
+- **Re-ranking** — Cohere Rerank or BGE-reranker as second-stage filter
+- **Learning-to-rank** — LightGBM / sklearn ranker trained on click data (which job did user actually open/apply to?)
+- **Evaluation metrics** — precision@k, recall@k, MRR, NDCG on a held-out test set
+- **Click-through-rate prediction** — given (user_features, job_features) → P(click). Foundation for personalized ranking.
+- **Cold-start strategies** — content-based fallback when no history exists
 
 ### GenAI / LLMs (deep)
-- **LLM API basics** — Claude API, OpenAI API, structured outputs, tool use
+- **LLM API basics** — Claude API, OpenAI API, structured outputs (XML/JSON), tool use
 - **Prompt engineering** — system prompts, few-shot, chain-of-thought, role priming
-- **Prompt caching** (Anthropic-specific, big cost win)
-- **Streaming responses** — Server-Sent Events from FastAPI to browser; never make users wait
-- **RAG (Retrieval-Augmented Generation)** — chunking strategies (fixed, semantic, hierarchical), embedding model choice, retrieval, re-rank, generation, citations
-- **Per-tenant RAG** — each hostel has its own corpus + index; query routing
-- **LangChain** — chains, memory, tools, output parsers (start here)
+- **Prompt caching** (Anthropic-specific, big cost win since system prompt is identical per user-session)
+- **Streaming responses** — SSE from FastAPI to browser; never wait 5s for full output
+- **RAG (Retrieval-Augmented Generation)** — chunking strategies, embedding model choice, retrieve → re-rank → generate → cite
+- **Per-user RAG** — each user has their own "knowledge base" (their applied-to companies, saved jobs, prep notes, interview feedback) which the agent can reference
+- **Domain RAG** — shared corpus: Glassdoor reviews, Levels.fyi salary data, community interview prep threads. Used to answer "what's interview process at Google?"
+- **LangChain** — chains, memory, tools, output parsers
 - **LangGraph** — stateful multi-step agents with checkpoints
 - **LlamaIndex** — alternative RAG framework with strong indexing primitives
-- **MCP (Model Context Protocol)** — Anthropic's open standard; build StaySense as an MCP server so any AI client (Claude Desktop, etc.) can plug in
-- **Agent patterns** — ReAct (Reason + Act), Plan-Execute, Reflexion
-- **Tool use / function calling** — define schema, let LLM pick + call, return result, loop until done
-- **Multimodal LLMs** — vision (Claude / GPT-4o / Gemini) for hostel photo analysis
-- **Voice AI** — Whisper STT, ElevenLabs TTS, real-time loop
-- **Local LLMs** — Ollama for on-device, llama.cpp, quantization (Q4/Q5/Q8 trade-offs)
-- **Fine-tuning** — supervised fine-tuning (SFT) on a small open model, LoRA / QLoRA for parameter-efficient adaptation
-- **Guardrails** — prompt injection defense, PII redaction, off-topic blocking (Guardrails AI, NeMo Guardrails)
-- **Evaluation** — RAGAS, LangSmith, golden datasets, LLM-as-judge, regression testing for prompts
-- **Cost & latency engineering** — model cascading (cheap model first, escalate), caching, batching
+- **MCP (Model Context Protocol)** — wrap Dreamjobcometrue as an MCP server → user with Claude Desktop says "what should I apply to today?" and Claude queries their account
+- **Agent patterns** — ReAct (Reason+Act), Plan-Execute, Reflexion
+- **Tool use / function calling** — `search_jobs`, `parse_resume`, `extract_skills`, `generate_cover_letter`, `track_application`, `mark_applied`
+- **Multimodal LLMs** — vision LLM (Claude/GPT-4o/Gemini) for resume PDFs in messy layouts where pdfplumber fails
+- **Voice AI (optional)** — Whisper STT + ElevenLabs TTS for "interview practice with AI"
+- **Local LLMs** — Ollama for on-device, llama.cpp, quantization (Q4/Q5/Q8)
+- **Fine-tuning** — SFT on a small open model (Mistral-7B / Llama 3.1), LoRA / QLoRA for parameter-efficient adaptation. Use case: fine-tune on (resume_text, job_description, match_score) triples after collecting click data.
+- **Guardrails** — PII redaction (resumes contain phones, emails, addresses), prompt-injection defense, refuse off-topic ("what's the weather?"), refuse discriminatory job postings
+- **Evaluation** — RAGAS for retrieval quality, LangSmith for trace inspection, golden datasets, LLM-as-judge, regression testing for prompts in CI
+- **Cost & latency engineering** — model cascading (Haiku for cheap intent classification → Sonnet for cover letter draft), batch API for daily-digest generation, aggressive prompt caching
 
 ---
 
@@ -117,7 +132,7 @@ Project 2 **builds on top** of these. We will not re-explain `useState` or what 
                                ▼
                        ┌────────────────┐
                        │     nginx      │  ← Reverse proxy + SSL + rate limit
-                       │ (load balancer)│     + tenant subdomain routing
+                       │ (load balancer)│
                        └───┬──────┬─────┘
                            │      │
                   ┌────────┘      └────────┐
@@ -131,30 +146,33 @@ Project 2 **builds on top** of these. We will not re-explain `useState` or what 
            │  │             ▼           │  │
            │  │     ┌──────────────┐    │  │
            │  │     │    Redis     │    │  │  ← Cache + queue + pub/sub
-           │  │     │ (multipurpose)│    │  │     + session + rate-limit store
+           │  │     │ (multipurpose)│    │  │     + sessions + rate-limit store
            │  │     └─────┬────────┘    │  │
            │  │           │              │  │
            ▼  ▼           ▼              ▼  ▼
     ┌──────────────┐ ┌────────────┐ ┌──────────────┐
-    │   Postgres   │ │  Celery    │ │ ML / GenAI   │
-    │ (multi-tenant│ │  workers   │ │  service     │
-    │ schema + RLS)│ │ (async fan)│ │ (LangChain + │
-    └──────┬───────┘ └─────┬──────┘ │  LangGraph + │
-           │               │         │   MCP)       │
-           ▼               ▼         └──────┬───────┘
-   Tenants, hostels,   - Embed new listing │
-   listings, bookings, - Re-index RAG      │ embeddings
-   reviews, users,     - Scrape competitor │ + retrieval
-   conversations       - Send notifications│
-                       - Generate weekly   ▼
-                         summaries  ┌──────────────┐
-                                    │  Vector DB   │
-                                    │   (Qdrant)   │
-                                    │ tenant-      │
-                                    │ scoped       │
-                                    │ collections  │
-                                    └──────────────┘
+    │   Postgres   │ │  Celery    │ │ AI service   │
+    │ (user-scoped │ │  workers   │ │ (LangChain + │
+    │  + RLS)      │ │ (async +   │ │  LangGraph + │
+    │ users, jobs, │ │  scrapers) │ │   MCP server)│
+    │ matches,     │ └─────┬──────┘ └──────┬───────┘
+    │ applications,│       │                │
+    │ saved_jobs,  │       ├─ scrape company career pages every 6h
+    │ click_logs   │       ├─ embed new jobs into Qdrant
+    └──────┬───────┘       ├─ daily digest email per user
+           │               ├─ re-rank model retraining (weekly)
+           │               └─ resume parse on upload
+           │                       │
+           ▼                       ▼
+   ┌────────────────┐      ┌──────────────────┐
+   │  Object store  │      │   Vector DB      │
+   │ (R2 / S3)      │      │   (Qdrant)       │
+   │  raw resumes   │      │ - job_postings   │
+   │  encrypted     │      │ - user_resumes   │
+   └────────────────┘      │ - per-user notes │
+                           └──────────────────┘
 
+   External:  Resend (email) · Twilio WhatsApp · Anthropic API · Cohere Rerank · Greenhouse/Lever APIs
    Observability sidecar:  Sentry · OpenTelemetry → Tempo · Prometheus → Grafana
 ```
 
@@ -168,214 +186,204 @@ Every phase ends with a **deliverable** Pratik can show, plus explicit **learnin
 
 ### Phase 0 — Bridge from Project 1 (~1 week, 3-4 sessions)
 
-**Goal:** decide the actual scope and stand up the empty project.
+**Goal:** decide final scope, stand up empty FastAPI project.
 
 **Sub-milestones:**
-- **M0.1** Read this roadmap top-to-bottom; lock or pivot the working title (StaySense / DocSense / PriceProphet / EduMatch)
-- **M0.2** Create fresh repo + GitHub remote; decide directory (recommendation: separate dir, separate repo, separate Vercel + Render projects)
-- **M0.3** Create `LEARNING_PROJECT2.md` journal (mirrors Project 1's `LEARNING.md` pattern)
+- **M0.1** Re-read this roadmap end-to-end; lock final scope
+- **M0.2** Create fresh repo + GitHub remote. Recommendation: `E:\DREAMJOB\`, separate Vercel + Render projects.
+- **M0.3** Create `LEARNING_PROJECT2.md` journal modeled on Project 1's `LEARNING.md`
 - **M0.4** Stub: `pyproject.toml`, `.gitignore`, `Dockerfile` skeleton, `docker-compose.yml` skeleton, FastAPI hello-world
-- **M0.5** Run FastAPI locally via `uvicorn`, hit `GET /` returns JSON
+- **M0.5** Run FastAPI locally via `uvicorn`; hit `GET /` returns JSON
 
-**Deliverable:** empty FastAPI app running on `localhost:8000`, repo on GitHub, journal initialized.
+**Deliverable:** empty FastAPI app on `localhost:8000`, repo on GitHub, journal initialized.
 
-**Learning outcomes:** FastAPI hello-world; understand `uvicorn` vs `gunicorn`; ASGI vs WSGI mental model.
+**Learning outcomes:** FastAPI hello-world; `uvicorn` vs `gunicorn`; ASGI vs WSGI mental model.
 
 ---
 
-### Phase 1 — Multi-tenant Foundation (~3-4 weeks)
+### Phase 1 — User-Scoped Foundation (~3-4 weeks)
 
-**Goal:** an authenticated, multi-tenant FastAPI backend with versioned migrations, deployed.
+**Goal:** authenticated, per-user-isolated FastAPI backend with versioned migrations, deployed.
 
 **Sub-milestones:**
 - **M1.1** FastAPI app structure (`app/`, `api/`, `db/`, `models/`, `schemas/`, `core/`)
-- **M1.2** Async SQLAlchemy + async Postgres driver (`asyncpg`) + Alembic
-- **M1.3** Multi-tenant schema design — `tenants`, `tenant_users`, `hostels`, `listings`, `bookings`, `reviews` tables, every domain row has `tenant_id`
-- **M1.4** Tenant resolution middleware — read `X-Tenant-Slug` header (or subdomain) → load tenant → inject into request context
-- **M1.5** Postgres Row-Level Security policies for tenant isolation (defense in depth: even if app code forgets `WHERE tenant_id = ?`, the DB enforces it)
-- **M1.6** Auth: per-user JWT signed with tenant_id claim + tenant API keys for service-to-service
-- **M1.7** Login + register endpoints, hashed passwords (`argon2` or `bcrypt`), refresh tokens
-- **M1.8** Migrate Lalpur Hostels' Project 1 data into tenant #1 via a one-off Alembic data migration
-- **M1.9** Dockerize: `Dockerfile` (multi-stage build), `docker-compose.yml` (api + postgres + redis), local stack up via `docker compose up`
-- **M1.10** Deploy to Render multi-service (api + postgres + redis), env vars, custom domain optional
+- **M1.2** Async SQLAlchemy + `asyncpg` driver + Alembic
+- **M1.3** Schema design — `users`, `resumes`, `dream_companies`, `interests`, `job_postings` (shared), `matches`, `applications`, `saved_jobs`, `click_logs`. User-scoped tables have `user_id` FK; job_postings is global.
+- **M1.4** Postgres Row-Level Security policies — every user-scoped table has a policy `user_id = current_setting('app.current_user_id')::int`. Defense in depth.
+- **M1.5** User registration + login — hashed passwords (`argon2`), JWT with refresh tokens, "forgot password" flow with email reset
+- **M1.6** Email verification on signup (deferred to Phase 3 if Resend setup blocks)
+- **M1.7** File upload endpoint — `POST /resume` accepts PDF/DOCX (max 5MB), stores raw file in object storage (Render disk or R2), metadata row in `resumes`
+- **M1.8** Dockerize: `Dockerfile` (multi-stage), `docker-compose.yml` (api + postgres + redis), local stack via `docker compose up`
+- **M1.9** Deploy to Render multi-service (api + postgres + redis), env vars, custom domain optional
 
-**Deliverable:** logged-in user can hit `GET /hostels` and see only their tenant's data. Trying to access another tenant's data returns 403 (RLS-enforced).
+**Deliverable:** Pratik registers, logs in, uploads his own resume, sees confirmation. Another user trying to read his resume gets 403 (RLS-enforced).
 
-**Learning outcomes:** FastAPI structure, async Python, multi-tenancy patterns (3 models with trade-offs), RLS, password hashing, Docker multi-stage builds, multi-service Render deploy.
-
-**Why this matters:** every B2B SaaS Pratik will ever build needs this foundation. It's the layer everything else assumes.
+**Learning outcomes:** FastAPI structure, async Python, per-user data isolation patterns, RLS, password hashing, multi-stage Docker, file upload + object storage, refresh-token flow.
 
 ---
 
-### Phase 2 — Search, Recommendations & Embeddings (~4-5 weeks)
+### Phase 2 — Resume Parsing + Job Matching v1 (~4-5 weeks)
 
-**Goal:** the recommendation engine. From naive filters to vector + ranking.
+**Goal:** the matching engine. From naive keyword filter to vector + ranking.
 
 **Sub-milestones:**
-- **M2.1** Filter-based recommender v1: `GET /recommend?city=ranchi&budget=8000&gender=girls` — pure SQL WHERE clauses. Tenant-scoped.
-- **M2.2** Intro to embeddings — math, intuition, picking a model (OpenAI `text-embedding-3-small` vs BGE-small for local). Embed every hostel description, store as `pgvector` column.
-- **M2.3** Semantic search v2: query text → embedding → cosine-similarity SQL query (`pgvector` ORDER BY `description <=> query_vec`). Compare results to v1.
-- **M2.4** Add a dedicated vector DB (Qdrant) — when pgvector hits its limits, move to Qdrant. Learn the trade-offs.
-- **M2.5** Hybrid retrieval v3: BM25 (Postgres full-text or OpenSearch) + dense + Reciprocal Rank Fusion. Measurably better than either alone.
-- **M2.6** Re-ranker v4: top-50 from hybrid → Cohere Rerank or BGE-reranker → top-10 personalized
-- **M2.7** Click-through logging — every recommendation → which hostel was clicked → eval signal
-- **M2.8** Learning-to-rank model v5: train a LightGBM ranker on the click logs (offline eval first)
-- **M2.9** Redis hot-query cache — same query within 5 min serves from Redis, not DB+vectors
-- **M2.10** Evaluation harness: precision@10, MRR, NDCG on a held-out test set
+- **M2.1** Resume parser — accept PDF/DOCX; try `pdfplumber` first; fall back to vision-LLM (Claude or GPT-4o) for messy layouts. Extract: name, contact, skills (list), experience (job titles + dates + companies), education, projects. Store structured + raw text.
+- **M2.2** NER for skills/companies/locations — start with `spaCy` (free, fast, decent), promote to LLM-based extraction with structured output when accuracy matters. Build a controlled skill taxonomy (~500 canonical skills) so "Py" / "Python" / "Python 3" all map to one canonical entity.
+- **M2.3** Job ingest pipeline — seed by manually adding 50-100 job postings to the DB. Real ingestion comes in Phase 3.
+- **M2.4** Filter-based matching v1 — `GET /jobs?skills=python,ml&location=remote&min_salary=8L` (pure SQL WHERE)
+- **M2.5** Intro to embeddings — math + intuition + model choice (OpenAI `text-embedding-3-small` vs BGE-small local). Embed each resume + each job description; store as `pgvector` column.
+- **M2.6** Semantic matching v2 — query: resume vector → nearest-neighbor jobs via cosine. Compare results to v1.
+- **M2.7** Move to Qdrant (dedicated vector DB) when pgvector hits its scale ceiling. Learn the trade-offs hands-on.
+- **M2.8** Hybrid matching v3 — BM25 (Postgres full-text or OpenSearch) on skill keywords + dense on full text + Reciprocal Rank Fusion. Demonstrably better than either alone on the eval set.
+- **M2.9** Re-ranker v4 — top-50 from hybrid → Cohere Rerank or BGE-reranker → top-10 personalized
+- **M2.10** Click logging — every `GET /jobs/<id>` click + every `save` + every `mark_applied` writes to `click_logs`. The eval signal for Phase 4+.
+- **M2.11** Learning-to-rank v5 — train LightGBM ranker on click data (offline eval before deploy)
+- **M2.12** Cold-start handling — new user with no clicks: rank purely by resume↔JD hybrid score
+- **M2.13** Redis hot-query cache — identical queries within 5 min serve from Redis
+- **M2.14** Evaluation harness — precision@10, MRR, NDCG, click-through rate
 
-**Deliverable:** A query like "budget girls' PG with mess near MIT Ranchi for ₹8k/month" returns ranked results that visibly beat naive filters.
+**Deliverable:** Pratik uploads his real resume, types "ML engineer remote India", sees 10 plausible jobs ranked. Saves a few, clicks others. Stats panel shows his match scores.
 
-**Learning outcomes:** vector embeddings (intuition + math), cosine vs euclidean vs dot-product, pgvector vs dedicated vector DB, hybrid retrieval, re-ranking, learning-to-rank, recsys eval metrics, Redis caching strategies (cache-aside, write-through).
+**Learning outcomes:** PDF/DOCX parsing, NER, embeddings (intuition + math), pgvector vs Qdrant, hybrid retrieval, re-ranking, click logs as eval signal, learning-to-rank, cold-start, Redis caching strategies.
 
 ---
 
-### Phase 3 — Async Jobs, Observability, CI/CD (~3 weeks)
+### Phase 3 — Async Jobs, Scraping, Notifications, Observability (~3-4 weeks)
 
-**Goal:** the production-readiness layer. Async work, monitoring, automated deploys.
+**Goal:** keep the job database fresh; notify users; production-ready observability.
 
 **Sub-milestones:**
-- **M3.1** Celery + Redis broker — first async task: send welcome email after signup
-- **M3.2** Idempotent task design — retries don't double-charge / double-send
-- **M3.3** Celery Beat scheduled jobs — daily re-index of vector DB, weekly digest emails
-- **M3.4** Dead-letter queue for failed tasks; alerts on DLQ depth > N
-- **M3.5** Sentry integration — uncaught exceptions land with full traceback + user/tenant context
-- **M3.6** Structured logging in JSON, shipped to a free aggregator (Better Stack, Axiom, or Loki self-hosted)
-- **M3.7** OpenTelemetry distributed tracing — see the full request span from nginx → FastAPI → Postgres → Celery → vector DB
-- **M3.8** Prometheus metrics exposed at `/metrics`; Grafana dashboard with p50/p95/p99 latency, RPS, error rate
-- **M3.9** GitHub Actions CI: on push → lint (ruff) → typecheck (mypy / pyright) → tests (pytest) → build container
-- **M3.10** GitHub Actions CD: on green main → deploy via Render's API or push container to registry
+- **M3.1** Celery + Redis broker — first async task: send welcome email via Resend after signup
+- **M3.2** Idempotent task design — retries don't double-send / double-charge
+- **M3.3** **Curated scraper #1: Greenhouse-hosted boards** — Greenhouse exposes `boards-api.greenhouse.io/v1/boards/<company>/jobs` (public, ToS-clean). Build a Celery task that ingests ~20 companies (Razorpay, Cred, Zerodha, Atlassian, Stripe, etc.) every 6 hours. Each new job → embed → upsert into Qdrant + Postgres.
+- **M3.4** **Curated scraper #2: Lever-hosted boards** — similar public API (`api.lever.co/v0/postings/<company>`)
+- **M3.5** **Curated scraper #3: First-party career pages** — Playwright headless browser on 30 hand-picked company career URLs (Google careers, Microsoft careers, etc.). Respectful: 1 req/sec/host, robots.txt check, user-agent disclosure.
+- **M3.6** **Scraping mechanics learning module (LEARNING ONLY — not shipped to prod):** build a Naukri scraper to learn anti-bot evasion concepts. Code stays in `experiments/`, does not run in production. Tools: Playwright stealth, residential proxy concepts, fingerprint randomization. Treat as a study exercise — you'll never run it against live Naukri.
+- **M3.7** Celery Beat scheduled jobs — daily digest email at 8am IST per user with their top-5 matches; weekly re-index of stale jobs
+- **M3.8** Dead-letter queue for failed tasks; alerts on DLQ depth > N
+- **M3.9** Notification delivery via Resend (email) — branded template with the 5 matches + "why this fits you" one-liner per job (LLM-generated, cached)
+- **M3.10** WhatsApp notifications (optional, gated behind explicit user opt-in) — Twilio WhatsApp Business API
+- **M3.11** Sentry integration — uncaught exceptions with full traceback + user context
+- **M3.12** Structured JSON logging, shipped to free aggregator (Better Stack, Axiom, or Loki self-hosted)
+- **M3.13** OpenTelemetry distributed tracing — span from nginx → FastAPI → Postgres → Celery → vector DB
+- **M3.14** Prometheus metrics + Grafana dashboard — p50/p95/p99 latency, scraper success rate, embeddings/min, notification deliverability
+- **M3.15** GitHub Actions CI — lint (ruff) → typecheck (mypy/pyright) → tests (pytest) → build container
+- **M3.16** GitHub Actions CD — green main → deploy to Render via API
 
-**Deliverable:** when something breaks in prod, you find out within 30 seconds (Sentry alert) and can debug from the trace (OpenTelemetry).
+**Deliverable:** every morning at 8 IST, Pratik gets an email "5 new jobs matching you" with AI-written one-liners explaining each match. The job DB has 2000+ fresh postings updated every 6 hours.
 
-**Learning outcomes:** Celery + Redis as broker, task idempotency, observability triad (metrics + logs + traces), CI/CD pipelines, semantic versioning of containers.
+**Learning outcomes:** Celery + Redis as broker, task idempotency, web scraping mechanics (politely + at scale), notification systems, observability triad (metrics + logs + traces), CI/CD pipelines.
 
 ---
 
 ### Phase 4 — GenAI: RAG, Agents, MCP, Evals (~6-8 weeks) ⭐ THE BIG ONE
 
-**Goal:** every modern AI capability integrated, evaluated, and production-grade. This phase is roughly half the project by time.
+**Goal:** every modern AI capability integrated, evaluated, production-grade. Roughly half the project by time.
 
 **Sub-milestones:**
 
-**M4.1 — LLM basics (1 wk):** Claude API hello-world, prompt structure, structured outputs (XML or JSON), streaming responses to the browser via SSE. Prompt caching for repeated system prompts.
+**M4.1 — LLM basics (1 wk):** Claude API hello-world, prompt structure, structured outputs (XML/JSON), streaming via SSE. Prompt caching for repeated system prompts. First feature: AI-written "why this job matches you" one-liner shown next to every recommendation.
 
-**M4.2 — Per-tenant RAG v1 (1.5 wk):** Each tenant has policies/FAQs/listings ingested → chunked → embedded → indexed in a tenant-scoped Qdrant collection. Query routes to the right tenant's collection. Return answer with citations.
+**M4.2 — Cover-letter generator (1 wk):** Tool-use agent. `generate_cover_letter(job_id)` → loads resume + JD → drafts a tailored cover letter → streams to UI → user edits → saves. Logs each generation for eval.
 
-**M4.3 — Chunking strategies (0.5 wk):** Fixed-size vs semantic vs hierarchical vs late-chunking. A/B test on the eval set.
+**M4.3 — Per-user RAG (1.5 wk):** Each user has a private knowledge base — their saved jobs, applied jobs, notes from interviews, employer feedback. Indexed in a user-scoped Qdrant collection. Agent can answer "what did I tell Razorpay about my CRDT experience?"
 
-**M4.4 — Hybrid RAG (1 wk):** Same hybrid retrieval as recsys (BM25 + dense + RRF + re-rank), now used to feed the LLM. Quality jump is measurable.
+**M4.4 — Domain RAG (1 wk):** Shared corpus — Glassdoor reviews (legally-obtained samples), Levels.fyi salary data, community interview prep threads. Indexed once. Agent answers "what's interview process at Google for SDE-II?" with citations.
 
-**M4.5 — Tool use / function calling (1 wk):** Define tools: `search_hostels`, `check_availability`, `book_tour`, `get_reviews`. LLM picks + calls + uses results. Loop until LLM stops calling tools.
+**M4.5 — Chunking + retrieval quality (0.5 wk):** Fixed-size vs semantic vs hierarchical chunking. A/B test on golden eval set. Measure faithfulness + relevance with RAGAS.
 
-**M4.6 — LangChain (1 wk):** Refactor M4.1-4.5 into LangChain primitives. Learn chains, memory (conversation history), output parsers. Note where LangChain helps vs hurts.
+**M4.6 — Hybrid RAG (1 wk):** Same hybrid retrieval pattern as recsys (BM25 + dense + RRF + re-rank) but feeding LLM context.
 
-**M4.7 — LangGraph stateful agents (1 wk):** Multi-step workflows: gather requirements → search → present → answer follow-up → book. State persists across turns, checkpointed in Redis.
+**M4.7 — Job-search agent (1.5 wk):** Multi-turn agent. Tools: `search_jobs`, `filter_by_company`, `filter_by_salary`, `apply`, `save_for_later`, `compare_jobs`. Conversation: "I want remote ML roles paying 30L+ at startups" → agent clarifies → searches → presents → handles follow-ups.
 
-**M4.8 — MCP server (0.5 wk):** Wrap StaySense's data + tools as an MCP server. Anyone running Claude Desktop can plug in and query their hostel data. This is portfolio-grade.
+**M4.8 — LangChain refactor (1 wk):** Refactor M4.1-4.7 to LangChain primitives. Learn chains, memory, output parsers. Note where LangChain helps vs adds noise.
 
-**M4.9 — Guardrails (0.5 wk):** Prompt injection defense (instructional firewall), PII redaction on input AND output, off-topic refusal, tenant data leakage prevention.
+**M4.9 — LangGraph stateful agent (1 wk):** Multi-step: requirement gathering → search → present → refine → apply → follow-up reminder. State checkpointed in Redis so user can resume after closing the tab.
 
-**M4.10 — Evaluation framework (1 wk):** Golden dataset of 100 Q&A pairs per tenant. RAGAS for faithfulness/relevance scores. LangSmith for trace inspection. LLM-as-judge for nuanced quality. Regression tests run in CI when prompts change.
+**M4.10 — MCP server (0.5 wk):** Wrap Dreamjobcometrue as an MCP server. Anyone with Claude Desktop runs `dreamjobcometrue-mcp` and says "Claude, what should I apply to today?" — Claude calls the MCP server's tools, queries the user's account, returns ranked suggestions. **Portfolio-grade.**
 
-**M4.11 — Cost & latency engineering (0.5 wk):** Model cascading (Haiku for cheap → Sonnet for hard), prompt caching audit, batch API for non-realtime work. Measure cost-per-conversation.
+**M4.11 — Guardrails (0.5 wk):** Prompt-injection defense (instructional firewall), PII redaction on input (mask phone/email before sending resume text to LLM) AND output, refuse off-topic, refuse generating cover letters for jobs the user has flagged as suspicious.
 
-**M4.12 — Optional advanced (variable):**
-- **Fine-tuning with LoRA** — fine-tune Mistral-7B on hostel domain Q&A; serve via Ollama
-- **Multimodal** — Claude/GPT-4o reads hostel photos, generates descriptions, compares amenities visually
-- **Voice AI** — Whisper STT → agent → ElevenLabs TTS for inquiry calls
-- **GraphRAG** — extract entity graph (hostels, amenities, locations) from reviews; use graph traversal for structured queries
+**M4.12 — Evaluation framework (1 wk):** Golden dataset of 100 (resume, query, expected-top-10-jobs) tuples. RAGAS for RAG quality. LangSmith for trace inspection. LLM-as-judge for cover letter quality. Regression tests run in CI when prompts change.
 
-**Deliverable:** a working tenant-specific chatbot that can answer policy questions with citations, search the catalog, check availability, and book a tour — all evaluated against a golden dataset with regression tests.
+**M4.13 — Cost & latency engineering (0.5 wk):** Model cascading — Haiku for "is this query off-topic?" classifier, Sonnet for cover letter generation. Prompt-cache audit. Batch API for daily-digest generation. Per-user $$/mo budget alarms.
 
-**Learning outcomes:** end-to-end modern AI stack. By the end of Phase 4, Pratik will have hands-on experience with every concept that matters in 2026 GenAI.
+**M4.14 — Optional advanced (variable):**
+- **Fine-tuning with LoRA** — fine-tune Mistral-7B on (resume_text, job_description, match_label) data once you have 1000+ click signals. Serve via Ollama for cost-free inference.
+- **Multimodal** — vision LLM for messy resume PDFs that pdfplumber fails on. Already partial in M2.1; here we measure quality lift.
+- **Voice AI** — "interview practice with AI": Whisper STT → behavioral-interview agent → ElevenLabs TTS. User practices answering common questions, gets feedback.
+- **GraphRAG** — extract entity graph (people, companies, skills, projects) from resume text; use graph traversal for queries like "find jobs at companies where I have a connection".
+
+**Deliverable:** A user can have a full conversation: upload resume → "I want SDE-II at FAANG, India, ₹40L+" → agent searches → presents top-5 with explanations → user picks one → agent drafts cover letter → user edits → saves → next day reminded to follow up. All evaluated with regression tests.
+
+**Learning outcomes:** the entire 2026 modern AI stack, hands-on, end-to-end, evaluated. By the end of Phase 4, every concept in the "AI side" pre-reading list has shipping code attached.
 
 ---
 
 ### Phase 5 — Scale, Performance & Security (~3 weeks)
 
-**Goal:** make it actually production-grade. The 99% case is fast; the 1% case is handled.
+**Goal:** make it production-grade. The 99% case is fast; the 1% case is handled.
 
 **Sub-milestones:**
-- **M5.1** nginx prod config — SSL via Let's Encrypt, HTTP/2, gzip, cache headers, security headers (CSP, HSTS), rate limit zones per endpoint
-- **M5.2** FastAPI horizontal scaling — multiple workers behind nginx, sticky sessions disabled (truly stateless), session in Redis
+- **M5.1** nginx prod config — SSL via Let's Encrypt, HTTP/2, gzip, security headers (CSP, HSTS), rate-limit zones per endpoint
+- **M5.2** FastAPI horizontal scaling — multiple workers behind nginx, sessions in Redis (truly stateless)
 - **M5.3** Postgres connection pooling via pgbouncer; tune pool size
-- **M5.4** Read replica for Postgres (optional, if traffic justifies)
-- **M5.5** Query optimization — EXPLAIN ANALYZE on slow queries, add indexes, partial indexes for `WHERE actioned = false`
-- **M5.6** Background job priority queues — user-facing work (chatbot) has its own queue, never blocked by slow batch jobs
-- **M5.7** Auth hardening — refresh token rotation, revocation, suspicious-login detection
-- **M5.8** Multi-region awareness — if Render expands or you move to AWS, what changes
+- **M5.4** Read replica for Postgres (optional)
+- **M5.5** Query optimization — EXPLAIN ANALYZE on slow queries, indexes on `(user_id, created_at DESC)`, partial indexes for `WHERE applied_at IS NULL`
+- **M5.6** Background-job priority queues — user-facing (cover letter generation) has dedicated queue, never blocked by slow batch (daily scraping)
+- **M5.7** Auth hardening — refresh-token rotation, revocation, suspicious-login detection (unusual IP/UA)
+- **M5.8** Resume encryption at rest — column-level or whole-file. Decrypt only in-memory for processing; never log decrypted contents.
 - **M5.9** Blue-green deploys via GitHub Actions — zero-downtime, instant rollback
-- **M5.10** Database migrations in prod — expand-contract pattern, never break old code mid-deploy
+- **M5.10** Expand-contract migrations — never break old code mid-deploy
 
-**Deliverable:** p95 latency < 200ms for the recommendation endpoint, < 1s for chatbot first-token; can deploy without anyone noticing.
+**Deliverable:** p95 < 200ms for ranking endpoint, < 1s for chatbot first-token; can deploy without users noticing.
 
-**Learning outcomes:** the difference between "works" and "works at scale" — connection pools, indexes, query plans, deploy strategies, security headers.
+**Learning outcomes:** "works" vs "works at scale" — pools, indexes, query plans, deploy strategies, security headers, encryption at rest.
 
 ---
 
 ### Phase 6 — Polish, Launch, Real Users (~2-3 weeks)
 
-**Goal:** put it in front of real hostel owners and real students.
+**Goal:** put it in front of real job seekers (start with Pratik's friends/network).
 
 **Sub-milestones:**
-- **M6.1** Tenant admin dashboard — re-use Project 1's editorial style, but multi-tenant. Each tenant sees only their own data.
-- **M6.2** Public landing page — explain StaySense to hostel owners (B2B) and students (B2C). SEO-ready.
-- **M6.3** Onboarding flow — new hostel owner signs up → creates tenant → ingests their data → AI chatbot live within 10 min
-- **M6.4** Billing (optional) — Stripe integration, free tier + paid tiers
+- **M6.1** User dashboard — editorial style (Fraunces + saffron from Project 1 if Pratik wants brand continuity, OR pivot to a tech-feeling palette). Multi-page: jobs feed, saved, applied, profile, settings.
+- **M6.2** Public landing page — explain Dreamjobcometrue to a job-seeker. SEO-ready.
+- **M6.3** Onboarding flow — sign up → upload resume → pick interests → see first 5 matches in < 60s
+- **M6.4** "Refer a friend" — viral loop with rewards (free Pro month, etc.)
 - **M6.5** Documentation site — auto-generated from FastAPI OpenAPI + handwritten guides
-- **M6.6** First non-Lalpur tenant — find one friend's hostel, onboard them, watch them use it, fix what breaks
+- **M6.6** First 5 real users from Pratik's network — onboard, watch them use it, fix what breaks
 - **M6.7** Demo from phone — public URL Pratik can show anyone
 
-**Deliverable:** a real third party uses StaySense to manage their hostel.
+**Deliverable:** 5 real users actively using the platform; one of them gets an interview from a job suggested by the system.
 
-**Learning outcomes:** product polish, real-user feedback loops, deployment maturity.
+**Learning outcomes:** product polish, real-user feedback loops, viral mechanics.
 
 ---
 
 ### Phase 7 (optional, stretch) — Above-and-beyond
 
-- **Kubernetes** — graduate from Render to a managed K8s (DigitalOcean / GKE Autopilot). Learn pods, services, ingress, HPA.
-- **Service mesh** — Istio or Linkerd. Probably overkill for 3 services; learn for resume.
-- **Event-driven architecture** — Kafka or Redis Streams. Useful if StaySense grows to 50+ tenants with cross-tenant analytics.
-- **Multi-region deploy** — read replicas in another region, geo-DNS routing.
-- **A/B testing framework** — feature flags (Unleash / GrowthBook), assign tenants to recommendation algorithm variants, measure lift.
-- **Mobile app** — React Native or Expo, share auth + design tokens with web.
+- **Kubernetes** — graduate from Render to managed K8s. Learn pods, services, ingress, HPA.
+- **Event-driven architecture** — Redis Streams or Kafka for the scraping pipeline (decouple ingest from match).
+- **A/B testing framework** — feature flags (GrowthBook/Unleash), assign users to ranking-algorithm variants, measure lift in click-through rate.
+- **Mobile app** — React Native / Expo, share auth + design tokens with web.
+- **B2B pivot layer** — sell to colleges / training institutes; they get analytics across their cohort of students.
+- **Stripe billing** — free tier + Pro tier (unlimited cover letters, priority queue, more daily digests).
 
 ---
 
 ## Timeline (realistic)
 
 ```
-2026-05  Phase 0  bridge + repo setup
-2026-05  Phase 1  multi-tenant FastAPI foundation                  [~4 wks]
-2026-06  Phase 2  search + embeddings + recsys                     [~5 wks]
-2026-07  Phase 3  async jobs + observability + CI/CD               [~3 wks]
+2026-05  Phase 0  bridge + repo setup                              [~1 wk]
+2026-05  Phase 1  user-scoped FastAPI foundation                   [~4 wks]
+2026-06  Phase 2  resume parsing + matching v1→v5                  [~5 wks]
+2026-07  Phase 3  scraping + notifications + observability + CI/CD [~4 wks]
 2026-08  Phase 4  GenAI (RAG, agents, MCP, evals)                  [~7 wks] ← longest
-2026-10  Phase 5  scale + perf + security                           [~3 wks]
-2026-11  Phase 6  polish + first real tenant                        [~3 wks]
+2026-10  Phase 5  scale + perf + security                          [~3 wks]
+2026-11  Phase 6  polish + first real users                        [~3 wks]
 2026-12  Phase 7  stretch (only if motivated)
 ```
-
-Buffer assumed: 1-2 weeks per phase. Real life happens.
-
----
-
-## Alternative project ideas (in case StaySense doesn't excite future-Pratik)
-
-### Alternative A — "DocSense": Document Intelligence Platform
-B2B SaaS where small businesses upload PDFs/contracts and get AI Q&A, classification, compliance flagging.
-- **Pros:** B2B, real revenue, all the ML/RAG concepts apply
-- **Cons:** Less tied to hostels, more abstract, less domain knowledge advantage
-
-### Alternative B — "PriceProphet": Hostel Pricing Optimizer
-ML model that predicts demand for hostels and suggests dynamic pricing.
-- **Pros:** Tightly tied to Project 1, time-series ML, real ROI
-- **Cons:** Smaller scope, fewer infra concepts, less GenAI
-
-### Alternative C — "EduMatch": Tutor/Coaching Platform
-Same multi-tenant pattern as StaySense, but for tutors/coaching centers in Ranchi.
-- **Pros:** Larger market, similar architecture, easy to validate locally
-- **Cons:** Diverges from hostel domain
 
 ---
 
@@ -383,65 +391,87 @@ Same multi-tenant pattern as StaySense, but for tutors/coaching centers in Ranch
 
 | Risk | Mitigation |
 |---|---|
-| **Scope creep — adding too much in one phase** | Phases have hard deliverables; don't enter next phase until deliverable is met |
-| **GenAI burnout — Phase 4 is huge** | Optional sub-milestones (M4.12) are explicitly optional; stop when basics are solid |
-| **Render free tier limits** | Phase 1 stays on free; upgrade only when Phase 5 needs always-on |
-| **Vector DB cost** | Start with pgvector (free, in Postgres); move to Qdrant only when scale demands |
-| **LLM API cost** | Prompt caching + model cascading + Haiku-by-default keeps cost minimal; budget alert at $20/mo |
-| **Single dev (Pratik) bus factor** | Document everything in `LEARNING_PROJECT2.md` as you go; future-Pratik or a collaborator can pick up |
-| **AI moves fast — stack obsoletes** | Treat LangChain/LlamaIndex as replaceable glue; learn fundamentals (embeddings, retrieval, prompting) which don't obsolete |
+| **Resume PII handling** | Encryption at rest (M5.8), audit logs (from Project 1), explicit consent on upload, account-deletion endpoint, never log decrypted resumes |
+| **LLM cost** | Phase 4 M4.13 is dedicated cost engineering. Prompt caching + Haiku-first cascading + batch API keeps cost minimal. Personal budget alert at $20/mo. |
+| **Scraping legal exposure** | Production uses ONLY ToS-clean sources (Greenhouse/Lever public APIs, first-party career pages with `robots.txt` respect). Naukri scraper is a LEARNING-ONLY module in `experiments/`, never runs in prod. |
+| **Anti-bot arms race** | Don't fight LinkedIn/Naukri. Stick to first-party + APIs. Saves time + lawyer fees. |
+| **Cold-start (new user, no clicks)** | Resume-only matching for first 10 interactions; bootstraps signal naturally |
+| **Scope creep — Phase 4 is huge** | Sub-milestones M4.14 are explicitly optional; stop when basics are evaluated and shipping |
+| **GenAI burnout** | Buffer + permission to skip M4.14. Phases 0-3 + M4.1-13 already cover every key concept. |
+| **Single dev bus factor** | Document everything in `LEARNING_PROJECT2.md` as you go |
+| **AI stack obsoletes** | Treat LangChain/LlamaIndex as replaceable glue; learn fundamentals (embeddings, retrieval, prompting) which don't obsolete |
+| **Render free Postgres expires 2026-08-08** | Plan migration mid-Phase 3 / early Phase 4. Move to Neon (free, no expiry) or upgrade Render. |
 
 ---
 
 ## Pre-reading (skim, don't binge — ~30 min/week before kickoff)
 
 **Infrastructure side:**
-- **System Design:** *"System Design Interview"* by Alex Xu — Vol 1 covers everything Project 2 uses
-- **nginx:** Official Beginner's Guide — nginx.org/en/docs/beginners_guide.html
-- **Docker:** docs.docker.com/get-started
-- **Multi-tenancy:** Search "multi-tenant SaaS architecture" — read 3-4 articles, esp. Auth0's overview
-- **FastAPI:** fastapi.tiangolo.com/tutorial/ — better than Flask docs for async patterns
-- **Async Python:** real-world async vs blocking, see realpython.com/async-io-python/
+- **System Design Interview** by Alex Xu — covers most of what Project 2 uses
+- **nginx Beginner's Guide** — nginx.org/en/docs/beginners_guide.html
+- **Docker** — docs.docker.com/get-started
+- **Multi-tenancy patterns** — search "multi-tenant SaaS architecture", esp. Auth0's overview
+- **FastAPI tutorial** — fastapi.tiangolo.com/tutorial/
+- **Async Python** — realpython.com/async-io-python/
+
+**Domain-specific (new for this project):**
+- **Web scraping ethics & law** — search "ethical web scraping 2025", read the HiQ vs LinkedIn case summary
+- **Playwright docs** — playwright.dev (the headless-browser piece)
+- **Resume parsing** — Affinda / Sovren blogs (commercial parsers explain the problem space; open-source: Unstructured-IO, spaCy NER recipes)
 
 **AI / GenAI side:**
-- **LangChain docs:** python.langchain.com — "Tutorials → Chatbot" then "Tutorials → Agent"
-- **LangGraph:** langchain-ai.github.io/langgraph/ — stateful agents; AFTER plain LangChain
-- **MCP spec:** modelcontextprotocol.io — short, one sitting
-- **Anthropic Engineering blog:** anthropic.com/engineering — prompt caching, tool use, agent patterns
-- **OpenAI Cookbook:** github.com/openai/openai-cookbook — production patterns
-- **RAG techniques:** "Advanced RAG" series by LlamaIndex blog; Pinecone learning center
-- **Vector search math:** 1-hour read on cosine vs Euclidean vs dot-product
-- **LLM fine-tuning:** HuggingFace course Chapter 7 (free); start with a small classifier, then LoRA
-- **Evaluation:** RAGAS docs + Hamel Husain's "LLM evals" blog post — without evals you're flying blind
+- **LangChain docs** — python.langchain.com → "Tutorials → Chatbot" then "Tutorials → Agent"
+- **LangGraph** — langchain-ai.github.io/langgraph/
+- **MCP spec** — modelcontextprotocol.io (read once, one sitting)
+- **Anthropic Engineering blog** — prompt caching, tool use, agent patterns
+- **OpenAI Cookbook** — github.com/openai/openai-cookbook
+- **RAG techniques** — "Advanced RAG" series by LlamaIndex blog; Pinecone learning center
+- **Vector search math** — 1-hour read on cosine vs Euclidean vs dot-product
+- **LLM fine-tuning** — HuggingFace course Ch 7; small classifier first, then LoRA
+- **Evaluation** — RAGAS docs + Hamel Husain's "LLM evals" blog post
+
+---
+
+## Alternative project ideas (preserved in case Pratik pivots again)
+
+### Alternative A — "StaySense" (the previous Project 2 plan)
+Multi-tenant hostel recommendation platform for Indian Tier-2/3 cities. Pratik's 3 hostels as tenants #1-3. Same modern AI stack, hostel domain. Detailed plan was the previous version of this file (in git history at commit `c25c09b`).
+
+### Alternative B — "DocSense": Document Intelligence Platform
+B2B SaaS where small businesses upload PDFs/contracts → AI Q&A, classification, compliance. Pros: B2B revenue. Cons: more abstract, less personal use case.
+
+### Alternative C — "PriceProphet": Hostel Pricing Optimizer
+ML model that predicts demand for Project-1 hostels and suggests dynamic pricing. Pros: tightly tied to Project 1, time-series ML. Cons: smaller scope, less GenAI.
+
+### Alternative D — "EduMatch": Tutor/Coaching Platform
+Same multi-tenant pattern, but for tutors/coaching centers in Ranchi. Pros: large market, similar architecture. Cons: diverges from your domain expertise.
 
 ---
 
 ## How sessions will run (the collab contract)
 
-Same as Project 1's teaching style, with one change:
-
-1. **Claude teaches concept** — what it is, why it exists, real-world analogy, DSA mapping
+1. **Claude teaches concept** — what + why + real-world analogy + DSA mapping
 2. **Claude gives a code block** Pratik types into a file (Claude does NOT use Edit/Write)
 3. **Pratik types it, saves, says "done"**
-4. **Claude reviews** (via Read) and either approves or course-corrects
+4. **Claude reviews** via Read and either approves or course-corrects
 5. **Test the slice** — curl / browser / pytest as appropriate
 6. **Footer tracker** on every reply: `📚 Phase N · M X.Y · Step a/b`
 
-**What's different vs Project 1:** Pratik types **everything**, including UI markup. No shortcut. Slower, deeper.
+**Different from Project 1:** Pratik types **everything** including UI markup. Slower, deeper.
 
-**Exceptions:** purely boilerplate scaffolding (`.gitignore`, lockfiles) — Claude can offer to write after asking once.
+**Exception:** purely boilerplate scaffolding (`.gitignore`, lockfiles, generated migration shells) — Claude can offer to write after asking once.
 
 ---
 
 ## Session 1 plan (when Pratik says "let's start")
 
 1. Re-read this file together (10 min) — verify scope still fits
-2. Confirm working title (StaySense or pivot)
-3. Decide repo location — recommendation: `E:\STAYSENSE\` (separate from `E:\HOTEL WEB\`), fresh `git init`, fresh GitHub repo
+2. Confirm final project name (currently `Dreamjobcometrue` — Pratik can refine)
+3. Decide repo location — recommendation: `E:\DREAMJOB\`, fresh `git init`, fresh GitHub repo
 4. Create `LEARNING_PROJECT2.md` modeled on Project 1's journal
-5. Initialize `project_current_milestone.md` memory to point at Project 2 Phase 0 M0.1
-6. Verify tooling: Python version, Docker installed, `uv` or `pip` choice, IDE setup
-7. Start M0.1 (the read-through is itself M0.1 if Pratik agrees)
+5. Initialize `project_current_milestone.md` memory to Project 2 Phase 0 M0.1
+6. Verify tooling — Python version, Docker installed, choice of `uv` vs `pip`, IDE setup
+7. Start M0.1 (the read-through *is* M0.1 if Pratik agrees)
 
 ---
 
@@ -449,6 +479,10 @@ Same as Project 1's teaching style, with one change:
 
 Project 1 proved Pratik can ship. Project 2 proves Pratik can architect.
 
-The plan is ambitious. The plan is also flexible — phases compose, sub-milestones are skippable, the timeline is realistic-not-aggressive. The goal isn't to race; it's to come out the other end able to build any production AI-native B2B SaaS from first principles.
+The plan is ambitious. The plan is also flexible — phases compose, sub-milestones are skippable, the timeline is realistic-not-aggressive. The goal isn't to race; it's to come out the other end able to architect any production AI-native B2C product from first principles.
 
-Saved 2026-04-27. Substantially expanded 2026-05-11. Re-architected for full code authorship + deep AI integration 2026-05-12.
+> **History:**
+> - Saved 2026-04-27 as "StaySense" hostel platform plan
+> - Substantially expanded 2026-05-11 (modern AI stack additions)
+> - Re-architected 2026-05-12 for full code authorship + deep AI integration
+> - **Pivoted 2026-05-12 to Dreamjobcometrue** (job-discovery domain) per Pratik's redirection; all concepts preserved, domain re-themed
